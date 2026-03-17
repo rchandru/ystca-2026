@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YSTCA 2026 — Beneficiary Selection</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0F0E0C;
+      --surface: #1A1814;
+      --card: #211F1B;
+      --border: #2E2B25;
+      --saffron: #E8872A;
+      --gold: #D4A832;
+      --sage: #6B9E6E;
+      --parchment: #F2EBE0;
+      --muted: #7A7368;
+      --ink: #E8E2D8;
+      --ink2: #B8B0A4;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background: var(--surface);
+      border-bottom: 3px solid var(--saffron);
+      padding: 1.5rem 2.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+    }
+
+    .logo-mark {
+      width: 44px;
+      height: 44px;
+      border: 2px solid var(--saffron);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.2rem;
+      color: var(--saffron);
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .logo-text h1 {
+      font-family: 'Cormorant Garamond', serif;
+      color: var(--parchment);
+      font-size: 1.4rem;
+      font-weight: 600;
+    }
+
+    .logo-text p {
+      font-size: 0.65rem;
+      color: var(--saffron);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-top: 0.15rem;
+      opacity: 0.8;
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 1.5rem;
+    }
+
+    .hero {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .hero .eyebrow {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--saffron);
+      margin-bottom: 0.8rem;
+    }
+
+    .hero h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.4rem;
+      color: var(--parchment);
+      font-weight: 600;
+      line-height: 1.2;
+      margin-bottom: 0.8rem;
+    }
+
+    .hero p {
+      font-size: 0.88rem;
+      color: var(--muted);
+      max-width: 480px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      max-width: 780px;
+      width: 100%;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 2rem;
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--saffron);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.2s;
+    }
+
+    .card:hover {
+      border-color: rgba(232, 135, 42, 0.4);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    }
+
+    .card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .card-icon {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .card h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem;
+      color: var(--parchment);
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+
+    .card p {
+      font-size: 0.78rem;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 1.2rem;
+    }
+
+    .card-action {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      color: var(--saffron);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .card-badge {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 2px;
+      background: rgba(107, 158, 110, 0.15);
+      color: var(--sage);
+      border: 1px solid rgba(107, 158, 110, 0.3);
+    }
+
+    .status-bar {
+      max-width: 780px;
+      width: 100%;
+      margin-top: 1.5rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .status-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--sage);
+    }
+
+    .status-dot.pending {
+      background: var(--muted);
+    }
+
+    #statusText {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+
+    .config-notice {
+      max-width: 780px;
+      width: 100%;
+      margin-top: 1rem;
+      padding: 0.8rem 1.2rem;
+      background: rgba(212, 168, 50, 0.08);
+      border: 1px solid rgba(212, 168, 50, 0.25);
+      border-radius: 5px;
+      font-size: 0.75rem;
+      color: var(--gold);
+      line-height: 1.5;
+      display: none;
+    }
+
+    .config-notice.show {
+      display: block;
+    }
+
+    footer {
+      padding: 1.5rem 2rem;
+      text-align: center;
+      font-size: 0.68rem;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+    }
+
+    @media(max-width:600px) {
+      .cards {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="logo-mark">YS</div>
+    <div class="logo-text">
+      <h1>YSTCA 2026 — Beneficiary Selection</h1>
+      <p>Youth Services Through Cultural Arts · Bay Area</p>
+    </div>
+  </header>
+
+  <main>
+    <div class="hero">
+      <div class="eyebrow">2026 Event Planning</div>
+      <h2>Choose Your Beneficiary</h2>
+      <p>Each evaluator scores independently. Results are saved automatically and aggregated in real-time.</p>
+    </div>
+
+    <div class="cards">
+      <a class="card" href="scorecard.html">
+        <div class="card-badge">For Each Evaluator</div>
+        <div class="card-icon">📋</div>
+        <h3>My Scorecard</h3>
+        <p>Rate each candidate nonprofit across your own custom criteria and weights. Takes about 5 minutes.</p>
+        <div class="card-action">Open Scorecard →</div>
+      </a>
+      <a class="card" href="aggregator.html">
+        <div class="card-badge">Live Results</div>
+        <div class="card-icon">📊</div>
+        <h3>Results Aggregator</h3>
+        <p>See all evaluator scores combined in real-time. Updates automatically as people submit.</p>
+        <div class="card-action">View Results →</div>
+      </a>
+    </div>
+
+    <div class="status-bar">
+      <div class="status-item">
+        <div class="status-dot" id="connDot"></div>
+        <span id="statusText">Checking connection…</span>
+      </div>
+      <div style="font-size:0.72rem;color:var(--muted)">Scores saved to Google Sheets · <a href="aggregator.html"
+          style="color:var(--saffron);text-decoration:none">View live →</a></div>
+    </div>
+
+    <div class="config-notice" id="configNotice">
+      ⚠ Google Sheets not yet configured. Open <code>scorecard.html</code> and <code>aggregator.html</code> and set the
+      <code>APPS_SCRIPT_URL</code> variable at the top of each file to your deployed Apps Script URL.
+    </div>
+  </main>
+
+  <footer>YSTCA 2026 · Built for the beneficiary selection meeting · Scores stored in Google Sheets</footer>
+
+  <script>
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzOb8sXF3S9dFrtPUay_wQ_gOLNK3RKS6ZliAD6ZH17CNGC0JIcGCumqALWD0evCCM_/exec";
+
+    async function checkConnection() {
+      const dot = document.getElementById('connDot');
+      const txt = document.getElementById('statusText');
+      const notice = document.getElementById('configNotice');
+
+      if (APPS_SCRIPT_URL === "YOUR_APPS_SCRIPT_URL_HERE") {
+        dot.className = 'status-dot pending';
+        txt.textContent = 'Not configured yet — see setup guide';
+        notice.classList.add('show');
+        return;
+      }
+      try {
+        const res = await fetch(APPS_SCRIPT_URL + '?action=get_scores');
+        const data = await res.json();
+        if (data.ok) {
+          dot.className = 'status-dot';
+          txt.textContent = `Connected · ${data.scores.length} score${data.scores.length !== 1 ? 's' : ''} submitted so far`;
+        } else throw new Error();
+      } catch {
+        dot.className = 'status-dot pending';
+        txt.textContent = 'Connection error — check Apps Script URL';
+      }
+    }
+    checkConnection();
+  </script>
+</body>
+
+</html>

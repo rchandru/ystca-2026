@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YSTCA 2026 — Live Results</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg: #F5F1EB;
+      --surface: #FFFFFF;
+      --card: #FAF7F2;
+      --border: #DDD6C8;
+      --border2: #C8C0B0;
+      --saffron: #C86A18;
+      --gold: #A8820A;
+      --sage: #3A7040;
+      --rust: #A03018;
+      --ink: #1A1610;
+      --ink2: #4A4438;
+      --muted: #7A7268;
+      --shadow: rgba(26, 22, 16, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      min-height: 100vh;
+    }
+
+    header {
+      background: var(--ink);
+      border-bottom: 3px solid var(--saffron);
+      padding: 1.1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+    }
+
+    .logo-mark {
+      width: 36px;
+      height: 36px;
+      border: 2px solid var(--saffron);
+      border-radius: 3px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem;
+      color: var(--saffron);
+      font-weight: 700;
+    }
+
+    .logo-text h1 {
+      font-family: 'Cormorant Garamond', serif;
+      color: #F5F1EB;
+      font-size: 1.15rem;
+      font-weight: 600;
+    }
+
+    .logo-text p {
+      font-size: 0.62rem;
+      color: var(--saffron);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-top: 0.1rem;
+      opacity: 0.8;
+    }
+
+    .header-nav {
+      display: flex;
+      gap: 0.6rem;
+      align-items: center;
+    }
+
+    .btn {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.76rem;
+      font-weight: 600;
+      padding: 0.42rem 0.9rem;
+      border-radius: 3px;
+      cursor: pointer;
+      border: none;
+      transition: all 0.15s;
+    }
+
+    .btn-light {
+      background: transparent;
+      color: #F5F1EB;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .btn-light:hover {
+      border-color: var(--saffron);
+      color: var(--saffron);
+    }
+
+    .btn-ink {
+      background: var(--ink);
+      color: white;
+    }
+
+    .btn-ink:hover {
+      background: #2C2418;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--ink2);
+      border: 1px solid var(--border2);
+    }
+
+    .btn-ghost:hover {
+      border-color: var(--saffron);
+      color: var(--saffron);
+    }
+
+    .btn-sm {
+      font-size: 0.68rem;
+      padding: 0.3rem 0.7rem;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 1.6rem 1.5rem 5rem;
+    }
+
+    .label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--saffron);
+      margin-bottom: 0.45rem;
+    }
+
+    /* LIVE BAR */
+    .live-bar {
+      background: var(--ink);
+      padding: 0.6rem 1.3rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+    }
+
+    .live-indicator {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.72rem;
+      color: rgba(245, 241, 235, 0.6);
+    }
+
+    .live-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #3A7040;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1
+      }
+
+      50% {
+        opacity: 0.4
+      }
+    }
+
+    .live-dot.offline {
+      background: #7A7268;
+      animation: none;
+    }
+
+    .live-controls {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    .refresh-btn {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.62rem;
+      padding: 0.2rem 0.6rem;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 2px;
+      background: transparent;
+      color: rgba(245, 241, 235, 0.5);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .refresh-btn:hover {
+      border-color: var(--saffron);
+      color: var(--saffron);
+    }
+
+    /* ROLE WEIGHTS */
+    .rw-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1rem 1.3rem;
+      margin-bottom: 1.3rem;
+      box-shadow: 0 1px 4px var(--shadow);
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .rw-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.98rem;
+      color: var(--ink);
+      white-space: nowrap;
+    }
+
+    .rw-items {
+      display: flex;
+      gap: 1.2rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .rw-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.75rem;
+      color: var(--ink2);
+    }
+
+    input.rw {
+      width: 50px;
+      text-align: center;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.88rem;
+      color: var(--saffron);
+      padding: 0.28rem 0.35rem;
+      border: 1px solid var(--border2);
+      border-radius: 3px;
+      background: var(--card);
+    }
+
+    input.rw:focus {
+      outline: none;
+      border-color: var(--saffron);
+    }
+
+    .rw-note {
+      font-size: 0.68rem;
+      color: var(--muted);
+      margin-left: auto;
+    }
+
+    /* EV STATUS */
+    .ev-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(185px, 1fr));
+      gap: 0.7rem;
+      margin-bottom: 1.3rem;
+    }
+
+    .ev-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      padding: 0.85rem 1rem;
+      box-shadow: 0 1px 3px var(--shadow);
+    }
+
+    .ev-card-name {
+      font-weight: 600;
+      font-size: 0.83rem;
+      margin-bottom: 0.12rem;
+    }
+
+    .ev-card-role {
+      font-size: 0.65rem;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+    }
+
+    .ev-scores {
+      display: flex;
+      gap: 0.4rem;
+    }
+
+    .ev-score-chip {
+      flex: 1;
+      text-align: center;
+      padding: 0.28rem;
+      border-radius: 3px;
+      background: var(--card);
+    }
+
+    .ev-score-chip .sc-lbl {
+      font-size: 0.56rem;
+      color: var(--muted);
+      display: block;
+      margin-bottom: 0.1rem;
+    }
+
+    .ev-score-chip .sc-val {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--ink2);
+    }
+
+    .ev-score-chip.winner {
+      background: rgba(200, 106, 24, 0.08);
+      border: 1px solid rgba(200, 106, 24, 0.2);
+    }
+
+    .ev-score-chip.winner .sc-val {
+      color: var(--saffron);
+    }
+
+    .ev-winner-note {
+      font-size: 0.65rem;
+      color: var(--muted);
+      padding-top: 0.4rem;
+      border-top: 1px solid var(--border);
+      margin-top: 0.4rem;
+    }
+
+    /* MAIN RESULTS */
+    .results-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+      margin-bottom: 1.3rem;
+      box-shadow: 0 2px 8px var(--shadow);
+    }
+
+    .rp-header {
+      background: var(--ink);
+      padding: 0.9rem 1.4rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .rp-header h2 {
+      font-family: 'Cormorant Garamond', serif;
+      color: #F5F1EB;
+      font-size: 1.05rem;
+    }
+
+    .rp-meta {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.62rem;
+      color: rgba(245, 241, 235, 0.4);
+    }
+
+    .rp-body {
+      display: grid;
+      grid-template-columns: 1.7fr 1fr;
+    }
+
+    .bars-side {
+      padding: 1.4rem;
+      border-right: 1px solid var(--border);
+    }
+
+    .abar-row {
+      margin-bottom: 1rem;
+    }
+
+    .abar-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 0.3rem;
+    }
+
+    .abar-name {
+      font-weight: 600;
+      font-size: 0.86rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .arank {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      color: var(--muted);
+    }
+
+    .leader-tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.58rem;
+      padding: 0.1rem 0.38rem;
+      border-radius: 2px;
+      background: rgba(200, 106, 24, 0.1);
+      color: var(--saffron);
+    }
+
+    .abar-track {
+      height: 9px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      overflow: hidden;
+    }
+
+    .abar-fill {
+      height: 100%;
+      border-radius: 5px;
+      transition: width 0.6s cubic-bezier(.4, 0, .2, 1);
+    }
+
+    .fa {
+      background: linear-gradient(90deg, #C86A18, #E09040);
+    }
+
+    .fb {
+      background: linear-gradient(90deg, #3A7040, #5A9060);
+    }
+
+    .fc {
+      background: linear-gradient(90deg, #A8820A, #C8A830);
+    }
+
+    .abar-pct {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .votes-row {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.7rem;
+      color: var(--muted);
+    }
+
+    .verdict-side {
+      background: var(--ink);
+      padding: 1.4rem;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .v-lbl {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.58rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--saffron);
+      margin-bottom: 0.35rem;
+    }
+
+    .v-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.45rem;
+      color: #F5F1EB;
+      line-height: 1.2;
+      margin-bottom: 0.5rem;
+      flex-grow: 1;
+    }
+
+    .v-score {
+      font-family: 'DM Mono', monospace;
+      font-size: 1.9rem;
+      color: #C8A830;
+    }
+
+    .v-sub {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.63rem;
+      color: rgba(200, 106, 24, 0.7);
+    }
+
+    .v-margin {
+      margin-top: 0.9rem;
+      padding-top: 0.9rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 0.68rem;
+      color: rgba(245, 241, 235, 0.38);
+      line-height: 1.6;
+    }
+
+    .agree-badge {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      padding: 0.12rem 0.42rem;
+      border-radius: 2px;
+    }
+
+    .ab-s {
+      background: rgba(58, 112, 64, 0.25);
+      color: #5A9060;
+    }
+
+    .ab-m {
+      background: rgba(200, 106, 24, 0.2);
+      color: #E09040;
+    }
+
+    .ab-x {
+      background: rgba(160, 48, 24, 0.2);
+      color: #D06050;
+    }
+
+    /* BREAKDOWN TABLES */
+    .section-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      margin-bottom: 1.3rem;
+      box-shadow: 0 1px 4px var(--shadow);
+      overflow: hidden;
+    }
+
+    .sp-header {
+      padding: 0.85rem 1.3rem;
+      border-bottom: 1px solid var(--border);
+      background: var(--card);
+    }
+
+    .sp-header h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.98rem;
+      color: var(--ink);
+    }
+
+    .sp-body {
+      padding: 1.2rem 1.3rem;
+      overflow-x: auto;
+    }
+
+    table.bk {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 480px;
+    }
+
+    table.bk th {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.57rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 0.5rem 0.8rem;
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+    }
+
+    table.bk th.num {
+      text-align: center;
+    }
+
+    table.bk td {
+      padding: 0.6rem 0.8rem;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.79rem;
+    }
+
+    table.bk td.num {
+      text-align: center;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+    }
+
+    table.bk tr:hover {
+      background: var(--card);
+    }
+
+    table.bk tr.agg-row {
+      background: rgba(200, 106, 24, 0.04);
+      border-top: 2px solid var(--border2);
+    }
+
+    .chip {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.57rem;
+      padding: 0.1rem 0.38rem;
+      border-radius: 2px;
+      margin-left: 0.28rem;
+    }
+
+    .cha {
+      background: rgba(200, 106, 24, 0.1);
+      color: var(--saffron);
+    }
+
+    .chb {
+      background: rgba(58, 112, 64, 0.1);
+      color: var(--sage);
+    }
+
+    .chc {
+      background: rgba(168, 130, 10, 0.1);
+      color: var(--gold);
+    }
+
+    .dot {
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+    }
+
+    .da {
+      background: #C86A18;
+    }
+
+    .db {
+      background: #3A7040;
+    }
+
+    .dc {
+      background: #A8820A;
+    }
+
+    /* CRITERIA TABLE */
+    table.cc {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 500px;
+    }
+
+    table.cc th {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.57rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 0.45rem 0.7rem;
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+    }
+
+    table.cc th.num {
+      text-align: center;
+    }
+
+    table.cc td {
+      padding: 0.52rem 0.7rem;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.77rem;
+    }
+
+    table.cc td.num {
+      text-align: center;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+    }
+
+    table.cc tr.cat-row {
+      background: rgba(200, 106, 24, 0.04);
+    }
+
+    table.cc tr.cat-row td {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.57rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--saffron);
+      padding: 0.32rem 0.7rem;
+    }
+
+    table.cc tr:hover:not(.cat-row) {
+      background: var(--card);
+    }
+
+    .crit-note {
+      font-size: 0.7rem;
+      color: var(--muted);
+      margin-bottom: 0.7rem;
+      font-style: italic;
+    }
+
+    /* NOTES */
+    .notes-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.8rem;
+    }
+
+    .note-col {
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.85rem;
+    }
+
+    .note-col-title {
+      font-size: 0.63rem;
+      font-weight: 600;
+      color: var(--muted);
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      margin-bottom: 0.55rem;
+      display: flex;
+      align-items: center;
+      gap: 0.32rem;
+    }
+
+    .note-entry {
+      margin-bottom: 0.55rem;
+      padding-bottom: 0.55rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .note-entry:last-child {
+      border: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .note-by {
+      font-size: 0.63rem;
+      color: var(--muted);
+      margin-bottom: 0.18rem;
+    }
+
+    .note-text {
+      font-size: 0.75rem;
+      color: var(--ink2);
+      line-height: 1.45;
+    }
+
+    .note-empty {
+      font-size: 0.72rem;
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    /* EMPTY / LOADING */
+    .empty-state {
+      text-align: center;
+      padding: 3.5rem 1.5rem;
+    }
+
+    .empty-state h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem;
+      color: var(--ink2);
+      margin-bottom: 0.5rem;
+    }
+
+    .empty-state p {
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .loading-spinner {
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      border: 2px solid var(--border);
+      border-top-color: var(--saffron);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      margin-right: 0.5rem;
+      vertical-align: middle;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg)
+      }
+    }
+
+    @media(max-width:700px) {
+      .rp-body {
+        grid-template-columns: 1fr;
+      }
+
+      .notes-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media print {
+
+      .live-bar,
+      .rw-panel,
+      .header-nav,
+      .btn {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <div class="logo">
+      <div class="logo-mark">YS</div>
+      <div class="logo-text">
+        <h1>YSTCA 2026 — Live Results</h1>
+        <p>Beneficiary Selection Aggregator</p>
+      </div>
+    </div>
+    <div class="header-nav">
+      <a href="index.html" class="btn btn-light btn-sm">← Home</a>
+      <a href="scorecard.html" class="btn btn-light btn-sm">My Scorecard</a>
+      <button class="btn btn-light btn-sm" onclick="window.print()">Print</button>
+    </div>
+  </header>
+
+  <!-- LIVE BAR -->
+  <div class="live-bar">
+    <div class="live-indicator">
+      <div class="live-dot" id="liveDot"></div>
+      <span id="liveText">Loading…</span>
+    </div>
+    <div class="live-controls">
+      <button class="refresh-btn" onclick="loadScores()">↻ Refresh</button>
+      <span style="font-size:0.62rem;color:rgba(245,241,235,0.3)">Auto-refreshes every 30s</span>
+    </div>
+  </div>
+
+  <div class="container">
+
+    <!-- ROLE WEIGHTS -->
+    <div class="rw-panel">
+      <div class="rw-title">Evaluator Role Weights</div>
+      <div class="rw-items">
+        <div class="rw-item"><label>Parent</label><input type="number" class="rw" id="rw-parent" value="1" min="0"
+            max="10" step="0.5" oninput="renderResults()"></div>
+        <div class="rw-item"><label>Advisor</label><input type="number" class="rw" id="rw-advisor" value="1.5" min="0"
+            max="10" step="0.5" oninput="renderResults()"></div>
+        <div class="rw-item"><label>Student</label><input type="number" class="rw" id="rw-student" value="0.75" min="0"
+            max="10" step="0.5" oninput="renderResults()"></div>
+      </div>
+      <div class="rw-note">Set all to 1 for simple equal average</div>
+    </div>
+
+    <!-- EVALUATOR CARDS -->
+    <div class="label">Evaluators (<span id="evCount">0</span>)</div>
+    <div class="ev-grid" id="evGrid"></div>
+
+    <!-- RESULTS -->
+    <div id="resultsArea">
+      <div class="empty-state">
+        <h2>Waiting for scores…</h2>
+        <p>Results will appear automatically as evaluators submit their scorecards.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // ══════════════════════════════════════════════════════════════════════════════
+    // !! CONFIGURATION — paste your Apps Script URL here !!
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzOb8sXF3S9dFrtPUay_wQ_gOLNK3RKS6ZliAD6ZH17CNGC0JIcGCumqALWD0evCCM_/exec";
+    // ══════════════════════════════════════════════════════════════════════════════
+
+    const COLORS = { A: '#C86A18', B: '#3A7040', C: '#A8820A' };
+    let allScores = [];
+    let lastCount = 0;
+
+    function getRW(role) { const el = document.getElementById('rw-' + role); return el ? (parseFloat(el.value) || 1) : 1; }
+
+    async function loadScores() {
+      const dot = document.getElementById('liveDot');
+      const txt = document.getElementById('liveText');
+
+      if (APPS_SCRIPT_URL === 'YOUR_APPS_SCRIPT_URL_HERE') {
+        dot.className = 'live-dot offline';
+        txt.textContent = 'Not configured — set APPS_SCRIPT_URL in this file';
+        return;
+      }
+
+      try {
+        const res = await fetch(APPS_SCRIPT_URL + '?action=get_scores&t=' + Date.now());
+        const data = await res.json();
+        if (data.ok) {
+          allScores = data.scores || [];
+          dot.className = 'live-dot';
+          txt.textContent = `Live · ${allScores.length} score${allScores.length !== 1 ? 's' : ''} · Last updated ${new Date().toLocaleTimeString()}`;
+          document.getElementById('evCount').textContent = allScores.length;
+          renderEvGrid();
+          renderResults();
+          if (allScores.length > lastCount && lastCount > 0) {
+            // New submission came in — briefly flash
+            document.title = `✦ New Score! — YSTCA Aggregator`;
+            setTimeout(() => document.title = 'YSTCA 2026 — Live Results', 3000);
+          }
+          lastCount = allScores.length;
+        } else throw new Error(data.message);
+      } catch (err) {
+        dot.className = 'live-dot offline';
+        txt.textContent = `Connection error · ${err.message}`;
+      }
+    }
+
+    function renderEvGrid() {
+      const grid = document.getElementById('evGrid');
+      if (!allScores.length) { grid.innerHTML = '<div style="color:var(--muted);font-size:0.8rem;grid-column:1/-1">No scores submitted yet.</div>'; return; }
+      const CDOT = { A: 'da', B: 'db', C: 'dc' };
+      grid.innerHTML = allScores.map(ev => {
+        const t = ev.totals; const cands = ev.candidates;
+        const sorted = ['A', 'B', 'C'].sort((x, y) => t[y].pct - t[x].pct);
+        const winner = sorted[0];
+        return `<div class="ev-card">
+      <div class="ev-card-name">${ev.evaluator.name}</div>
+      <div class="ev-card-role">${ev.evaluator.role} · ${ev.criteria?.length || '?'} criteria</div>
+      <div class="ev-scores">${['A', 'B', 'C'].map(k => `<div class="ev-score-chip ${k === winner ? 'winner' : ''}"><span class="sc-lbl"><span class="dot ${CDOT[k]}" style="display:inline-block;width:6px;height:6px;border-radius:50%;vertical-align:middle;margin-right:2px;background:${COLORS[k]}"></span>${cands[k]}</span><span class="sc-val">${t[k].pct.toFixed(0)}%</span></div>`).join('')}</div>
+      <div class="ev-winner-note">Pick: <strong>${cands[winner]}</strong></div>
+    </div>`;
+      }).join('');
+    }
+
+    function renderResults() {
+      const area = document.getElementById('resultsArea');
+      if (!allScores.length) {
+        area.innerHTML = `<div class="empty-state"><h2>Waiting for scores…</h2><p>Results will appear automatically as evaluators submit their scorecards.<br><a href="scorecard.html" style="color:var(--saffron)">Open Scorecard →</a></p></div>`;
+        return;
+      }
+
+      const firstCands = allScores[0].candidates;
+      const names = { A: firstCands.A || 'A', B: firstCands.B || 'B', C: firstCands.C || 'C' };
+
+      // Weighted aggregate
+      let aggPct = { A: 0, B: 0, C: 0 }, totalRW = 0;
+      const evWinners = [];
+      allScores.forEach(ev => {
+        const rw = getRW(ev.evaluator.role); totalRW += rw;
+        const t = ev.totals;
+        ['A', 'B', 'C'].forEach(k => aggPct[k] += t[k].pct * rw);
+        evWinners.push(['A', 'B', 'C'].sort((x, y) => t[y].pct - t[x].pct)[0]);
+      });
+      if (totalRW > 0) ['A', 'B', 'C'].forEach(k => aggPct[k] /= totalRW);
+      const sorted = ['A', 'B', 'C'].sort((x, y) => aggPct[y] - aggPct[x]);
+      const winner = sorted[0], second = sorted[1];
+      const margin = (aggPct[winner] - aggPct[second]).toFixed(1);
+      const ranks = { [sorted[0]]: '1st', [sorted[1]]: '2nd', [sorted[2]]: '3rd' };
+
+      const wc = { A: 0, B: 0, C: 0 }; evWinners.forEach(w => wc[w]++);
+      const wv = wc[winner], tv = allScores.length;
+      const agreeStr = wv === tv ? 'Unanimous' : wv > tv / 2 ? 'Majority' : 'Split';
+      const ac = wv === tv ? 'ab-s' : wv > tv / 2 ? 'ab-m' : 'ab-x';
+
+      // Criteria union
+      const critMap = {};
+      allScores.forEach(ev => {
+        (ev.criteria || []).forEach(c => {
+          if (!critMap[c.name]) critMap[c.name] = { name: c.name, cat: c.cat || 'Other', entries: [] };
+          critMap[c.name].entries.push({ scores: c.scores, weight: c.weight, rw: getRW(ev.evaluator.role) });
+        });
+      });
+      const catOrder = ['Mission Alignment', 'Org Quality', 'Fundraising', 'Partnership'];
+      const critRows = Object.values(critMap).map(cm => {
+        let ws = { A: 0, B: 0, C: 0 }, wt = 0;
+        cm.entries.forEach(e => { ['A', 'B', 'C'].forEach(k => ws[k] += (e.scores[k] || 0) * e.rw); wt += e.rw; });
+        const avg = { A: wt ? +(ws.A / wt).toFixed(2) : 0, B: wt ? +(ws.B / wt).toFixed(2) : 0, C: wt ? +(ws.C / wt).toFixed(2) : 0 };
+        return { name: cm.name, cat: cm.cat, avg, count: cm.entries.length };
+      }).sort((a, b) => {
+        const ci = x => catOrder.indexOf(x.cat) === -1 ? 99 : catOrder.indexOf(x.cat);
+        return ci(a) - ci(b) || a.name.localeCompare(b.name);
+      });
+
+      // Notes
+      const notesAgg = { A: [], B: [], C: [] };
+      allScores.forEach(ev => ['A', 'B', 'C'].forEach(k => { const n = ev.notes?.[k]; if (n && n.trim()) notesAgg[k].push({ by: ev.evaluator.name, text: n.trim() }); }));
+      const hasNotes = Object.values(notesAgg).some(a => a.length);
+
+      area.innerHTML = `
+  <!-- MAIN RESULTS -->
+  <div class="results-panel">
+    <div class="rp-header">
+      <h2>Aggregated Results · ${allScores.length} Evaluator${allScores.length > 1 ? 's' : ''}</h2>
+      <span class="rp-meta">Role-weighted · Live</span>
+    </div>
+    <div class="rp-body">
+      <div class="bars-side">
+        <div class="label" style="margin-bottom:0.75rem">Weighted Average Score</div>
+        ${['A', 'B', 'C'].map(k => `
+        <div class="abar-row">
+          <div class="abar-meta">
+            <div class="abar-name"><span class="dot d${k.toLowerCase()}" style="display:inline-block;width:9px;height:9px;border-radius:50%;background:${COLORS[k]}"></span>${names[k]}<span class="arank">${ranks[k]}</span>${k === winner ? `<span class="leader-tag">✓ Leader</span>` : ''}</div>
+            <div class="abar-pct" style="color:${COLORS[k]}">${aggPct[k].toFixed(1)}%</div>
+          </div>
+          <div class="abar-track"><div class="abar-fill f${k.toLowerCase()}" style="width:${aggPct[k]}%"></div></div>
+        </div>`).join('')}
+        <div class="votes-row">Individual picks: ${['A', 'B', 'C'].map(k => wc[k] > 0 ? `<strong>${names[k]}</strong> ${wc[k]}×` : null).filter(Boolean).join(' · ')}</div>
+      </div>
+      <div class="verdict-side">
+        <div class="v-lbl">Recommendation</div>
+        <div class="v-name">${names[winner]}</div>
+        <div class="v-score">${aggPct[winner].toFixed(1)}%</div>
+        <div class="v-sub">avg. across ${allScores.length} evaluator${allScores.length > 1 ? 's' : ''}</div>
+        <div class="v-margin">Leads ${names[second]} by ${margin} pts.<br>${parseFloat(margin) < 5 ? 'Close race — discussion recommended.' : 'Clear data-driven frontrunner.'}<br><br>Agreement: <span class="agree-badge ${ac}">${agreeStr} (${wv}/${tv})</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PER-EVALUATOR -->
+  <div class="section-panel">
+    <div class="sp-header"><h2>Score by Evaluator</h2></div>
+    <div class="sp-body">
+      <table class="bk">
+        <thead><tr><th>Evaluator</th><th>Role</th><th>Wt</th><th class="num">${names.A}</th><th class="num">${names.B}</th><th class="num">${names.C}</th><th class="num">Their Pick</th></tr></thead>
+        <tbody>
+          ${allScores.map(ev => {
+        const t = ev.totals; const es = ['A', 'B', 'C'].sort((x, y) => t[y].pct - t[x].pct); const ew = es[0]; const rw = getRW(ev.evaluator.role);
+        return `<tr><td><strong>${ev.evaluator.name}</strong></td><td style="font-size:0.7rem;color:var(--muted)">${ev.evaluator.role}</td><td class="num" style="color:var(--muted)">${rw}×</td>${['A', 'B', 'C'].map(k => `<td class="num" style="color:${k === ew ? COLORS[k] : 'inherit'};font-weight:${k === ew ? '600' : '400'}">${t[k].pct.toFixed(1)}%</td>`).join('')}<td class="num">${names[ew]}<span class="chip ch${ew.toLowerCase()}">#1</span></td></tr>`;
+      }).join('')}
+          <tr class="agg-row">
+            <td><strong>AGGREGATE</strong></td><td style="font-size:0.7rem;color:var(--muted)">weighted</td><td class="num" style="color:var(--muted)">—</td>
+            ${['A', 'B', 'C'].map(k => `<td class="num" style="color:${k === winner ? COLORS[k] : 'inherit'};font-weight:${k === winner ? '700' : '400'}">${aggPct[k].toFixed(1)}%</td>`).join('')}
+            <td class="num"><strong>${names[winner]}</strong><span class="chip ch${winner.toLowerCase()}">#1</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- CRITERIA -->
+  <div class="section-panel">
+    <div class="sp-header"><h2>Average Score by Criteria</h2></div>
+    <div class="sp-body">
+      <p class="crit-note">Averaged across all evaluators who included each criteria. Counts shown where evaluators used different sets.</p>
+      <table class="cc">
+        <thead><tr><th>Criteria</th><th>Evaluators</th><th class="num">${names.A}</th><th class="num">${names.B}</th><th class="num">${names.C}</th><th class="num">Leader</th></tr></thead>
+        <tbody>${(() => {
+          let rows = '', lc = '';
+          critRows.forEach(cr => {
+            if (cr.cat !== lc) { lc = cr.cat; rows += `<tr class="cat-row"><td colspan="6">${cr.cat}</td></tr>`; }
+            const ws = ['A', 'B', 'C'].sort((x, y) => cr.avg[y] - cr.avg[x])[0];
+            rows += `<tr><td>${cr.name}${cr.count < allScores.length ? `<span style="font-size:0.58rem;color:var(--muted);margin-left:0.25rem">(${cr.count}/${allScores.length})</span>` : ''}</td><td style="font-size:0.68rem;color:var(--muted)">${cr.count}</td>${['A', 'B', 'C'].map(k => `<td class="num" style="color:${k === ws ? COLORS[k] : 'inherit'};font-weight:${k === ws ? '600' : '400'}">${cr.avg[k].toFixed(1)}</td>`).join('')}<td class="num"><span class="dot d${ws.toLowerCase()}" style="display:inline-block;width:7px;height:7px;border-radius:50%;background:${COLORS[ws]};vertical-align:middle;margin-right:3px"></span>${names[ws]}</td></tr>`;
+          });
+          return rows;
+        })()}</tbody>
+      </table>
+    </div>
+  </div>
+
+  ${hasNotes ? `
+  <!-- NOTES -->
+  <div class="section-panel">
+    <div class="sp-header"><h2>Evaluator Notes</h2></div>
+    <div class="sp-body">
+      <div class="notes-grid">
+        ${['A', 'B', 'C'].map(k => `<div class="note-col">
+          <div class="note-col-title"><span class="dot d${k.toLowerCase()}" style="display:inline-block;width:7px;height:7px;border-radius:50%;background:${COLORS[k]}"></span>${names[k]}</div>
+          ${notesAgg[k].length ? notesAgg[k].map(n => `<div class="note-entry"><div class="note-by">${n.by}</div><div class="note-text">${n.text}</div></div>`).join('') : '<div class="note-empty">No notes.</div>'}
+        </div>`).join('')}
+      </div>
+    </div>
+  </div>`: ''}
+  `;
+    }
+
+    // Auto-refresh every 30 seconds
+    loadScores();
+    setInterval(loadScores, 30000);
+  </script>
+</body>
+
+</html>

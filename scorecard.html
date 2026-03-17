@@ -1,0 +1,1237 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YSTCA 2026 — My Scorecard</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0F0E0C;
+      --surface: #1A1814;
+      --card: #211F1B;
+      --border: #2E2B25;
+      --border2: #3A3630;
+      --saffron: #E8872A;
+      --gold: #D4A832;
+      --sage: #6B9E6E;
+      --rust: #C04A2E;
+      --parchment: #F2EBE0;
+      --muted: #7A7368;
+      --ink: #E8E2D8;
+      --ink2: #B8B0A4;
+      --shadow: rgba(0, 0, 0, 0.4);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      min-height: 100vh;
+    }
+
+    header {
+      background: var(--surface);
+      border-bottom: 3px solid var(--saffron);
+      padding: 1.1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+    }
+
+    .logo-mark {
+      width: 36px;
+      height: 36px;
+      border: 2px solid var(--saffron);
+      border-radius: 3px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem;
+      color: var(--saffron);
+      font-weight: 700;
+    }
+
+    .logo-text h1 {
+      font-family: 'Cormorant Garamond', serif;
+      color: var(--parchment);
+      font-size: 1.15rem;
+      font-weight: 600;
+    }
+
+    .logo-text p {
+      font-size: 0.62rem;
+      color: var(--saffron);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-top: 0.1rem;
+      opacity: 0.8;
+    }
+
+    .header-nav {
+      display: flex;
+      gap: 0.6rem;
+      align-items: center;
+    }
+
+    .btn {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.76rem;
+      font-weight: 600;
+      padding: 0.45rem 1rem;
+      border-radius: 3px;
+      cursor: pointer;
+      border: none;
+      transition: all 0.15s;
+    }
+
+    .btn-saffron {
+      background: var(--saffron);
+      color: white;
+    }
+
+    .btn-saffron:hover {
+      background: #C87020;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--ink2);
+      border: 1px solid var(--border2);
+    }
+
+    .btn-ghost:hover {
+      border-color: var(--saffron);
+      color: var(--saffron);
+    }
+
+    .btn-sage {
+      background: var(--sage);
+      color: white;
+      font-size: 0.9rem;
+      padding: 0.7rem 1.8rem;
+    }
+
+    .btn-sage:hover {
+      background: #5A8D5D;
+    }
+
+    .btn-sm {
+      font-size: 0.68rem;
+      padding: 0.32rem 0.7rem;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 1.6rem 1.5rem 5rem;
+    }
+
+    .label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--saffron);
+      margin-bottom: 0.45rem;
+    }
+
+    /* AUTOSAVE BANNER */
+    .autosave-bar {
+      background: rgba(107, 158, 110, 0.08);
+      border: 1px solid rgba(107, 158, 110, 0.2);
+      border-radius: 4px;
+      padding: 0.5rem 1rem;
+      margin-bottom: 1.2rem;
+      font-size: 0.72rem;
+      color: var(--sage);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .autosave-bar.warn {
+      background: rgba(232, 135, 42, 0.08);
+      border-color: rgba(232, 135, 42, 0.2);
+      color: var(--saffron);
+    }
+
+    .autosave-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--sage);
+      flex-shrink: 0;
+    }
+
+    .autosave-bar.warn .autosave-dot {
+      background: var(--saffron);
+    }
+
+    /* SETUP STRIP */
+    .setup-strip {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1.1rem 1.4rem;
+      margin-bottom: 1.3rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      gap: 0.9rem;
+      align-items: end;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+
+    .field label {
+      font-size: 0.63rem;
+      font-weight: 600;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .da {
+      background: #E8872A;
+    }
+
+    .db {
+      background: #6B9E6E;
+    }
+
+    .dc {
+      background: #D4A832;
+    }
+
+    input[type="text"] {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.84rem;
+      padding: 0.48rem 0.65rem;
+      border: 1px solid var(--border2);
+      border-radius: 3px;
+      background: var(--card);
+      color: var(--ink);
+      width: 100%;
+      transition: border-color 0.15s;
+    }
+
+    input[type="text"]:focus {
+      outline: none;
+      border-color: var(--saffron);
+    }
+
+    .ev-row {
+      display: flex;
+      gap: 0.4rem;
+    }
+
+    .ev-row input {
+      flex: 1;
+    }
+
+    .role-pill {
+      font-size: 0.63rem;
+      padding: 0 0.65rem;
+      border: 1px solid var(--border2);
+      border-radius: 3px;
+      background: var(--card);
+      color: var(--muted);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s;
+    }
+
+    .role-pill.parent {
+      border-color: rgba(232, 135, 42, 0.4);
+      color: var(--saffron);
+      background: rgba(232, 135, 42, 0.08);
+    }
+
+    .role-pill.advisor {
+      border-color: rgba(107, 158, 110, 0.4);
+      color: var(--sage);
+      background: rgba(107, 158, 110, 0.08);
+    }
+
+    .role-pill.student {
+      border-color: rgba(212, 168, 50, 0.4);
+      color: var(--gold);
+      background: rgba(212, 168, 50, 0.08);
+    }
+
+    /* MINI RESULT */
+    .mini-result {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.8rem;
+      margin-bottom: 1.3rem;
+    }
+
+    .mini-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1rem 1.2rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .mini-card.top {
+      border-color: var(--gold);
+    }
+
+    .mini-card.top::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--gold);
+    }
+
+    .mini-rank {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.56rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.25rem;
+    }
+
+    .mini-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.98rem;
+      color: var(--parchment);
+      margin-bottom: 0.4rem;
+      font-weight: 600;
+    }
+
+    .mini-score {
+      font-family: 'DM Mono', monospace;
+      font-size: 1.5rem;
+      color: var(--ink2);
+    }
+
+    .mini-card.top .mini-score {
+      color: var(--gold);
+    }
+
+    .mini-pct {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.58rem;
+      color: var(--muted);
+    }
+
+    .mini-bar-wrap {
+      margin-top: 0.6rem;
+      height: 3px;
+      background: var(--border);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .mini-bar-fill {
+      height: 100%;
+      border-radius: 2px;
+      transition: width 0.5s ease;
+    }
+
+    /* CRITERIA PANEL */
+    .criteria-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+      margin-bottom: 1.3rem;
+    }
+
+    .criteria-hdr {
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      padding: 0.9rem 1.3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+    }
+
+    .criteria-hdr-left h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem;
+      color: var(--parchment);
+    }
+
+    .criteria-hdr-left p {
+      font-size: 0.7rem;
+      color: var(--muted);
+      margin-top: 0.1rem;
+    }
+
+    .preset-row {
+      display: flex;
+      gap: 0.35rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .preset-lbl {
+      font-size: 0.63rem;
+      color: var(--muted);
+    }
+
+    .pbtn {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      padding: 0.22rem 0.55rem;
+      border: 1px solid var(--border2);
+      border-radius: 2px;
+      cursor: pointer;
+      background: transparent;
+      color: var(--muted);
+      transition: all 0.12s;
+    }
+
+    .pbtn:hover {
+      border-color: var(--saffron);
+      color: var(--saffron);
+    }
+
+    .pbtn.on {
+      background: var(--saffron);
+      border-color: var(--saffron);
+      color: white;
+    }
+
+    table.ct {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    table.ct thead tr {
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+    }
+
+    table.ct thead th {
+      padding: 0.55rem 0.9rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.57rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-align: left;
+    }
+
+    table.ct thead th.cth {
+      text-align: center;
+      min-width: 95px;
+    }
+
+    table.ct tbody tr.cat-hdr {
+      background: rgba(232, 135, 42, 0.04);
+      border-bottom: 1px solid var(--border);
+    }
+
+    table.ct tbody tr.cat-hdr td {
+      padding: 0.32rem 0.9rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.56rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--saffron);
+    }
+
+    table.ct tbody tr.crit-row {
+      border-bottom: 1px solid var(--border);
+      transition: background 0.1s;
+    }
+
+    table.ct tbody tr.crit-row:hover {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    table.ct td {
+      padding: 0.7rem 0.9rem;
+      vertical-align: middle;
+    }
+
+    table.ct tfoot tr {
+      background: var(--bg);
+      border-top: 2px solid var(--border);
+    }
+
+    table.ct tfoot td {
+      padding: 0.8rem 0.9rem;
+    }
+
+    .cn {
+      font-weight: 600;
+      font-size: 0.8rem;
+      color: var(--ink);
+    }
+
+    .cd {
+      font-size: 0.68rem;
+      color: var(--muted);
+      margin-top: 0.13rem;
+      line-height: 1.35;
+    }
+
+    .w-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    input.wnum {
+      width: 50px;
+      text-align: center;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.85rem;
+      color: var(--saffron);
+      padding: 0.28rem 0.35rem;
+      border: 1px solid var(--border2);
+      border-radius: 3px;
+      background: var(--bg);
+    }
+
+    input.wnum:focus {
+      outline: none;
+      border-color: var(--saffron);
+    }
+
+    .wpct {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      color: var(--muted);
+    }
+
+    .scell {
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    .stars {
+      display: flex;
+      gap: 2px;
+      justify-content: center;
+    }
+
+    .star {
+      font-size: 15px;
+      width: 19px;
+      height: 19px;
+      line-height: 19px;
+      text-align: center;
+      cursor: pointer;
+      color: var(--border2);
+      transition: color 0.1s, transform 0.1s;
+      user-select: none;
+    }
+
+    .star:hover {
+      transform: scale(1.25);
+    }
+
+    .sa {
+      color: #E8872A;
+    }
+
+    .sb {
+      color: #6B9E6E;
+    }
+
+    .sc {
+      color: #D4A832;
+    }
+
+    .sn {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.56rem;
+      color: var(--muted);
+      margin-top: 0.1rem;
+      text-align: center;
+    }
+
+    .rm-btn {
+      background: none;
+      border: none;
+      color: var(--border2);
+      cursor: pointer;
+      font-size: 0.72rem;
+      padding: 0.12rem 0.28rem;
+      border-radius: 2px;
+      transition: color 0.12s;
+    }
+
+    .rm-btn:hover {
+      color: var(--rust);
+    }
+
+    .add-row {
+      background: rgba(232, 135, 42, 0.03);
+      border-top: 1px dashed var(--border2);
+    }
+
+    .add-row td {
+      padding: 0.45rem 0.9rem;
+    }
+
+    .add-crit-form {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .add-crit-form input[type="text"] {
+      font-size: 0.75rem;
+      padding: 0.32rem 0.55rem;
+    }
+
+    .add-crit-form input[type="text"].c-name {
+      width: 145px;
+    }
+
+    .add-crit-form input[type="text"].c-desc {
+      flex: 1;
+      min-width: 160px;
+    }
+
+    .add-crit-form input[type="number"] {
+      width: 55px;
+      text-align: center;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--saffron);
+      padding: 0.32rem 0.35rem;
+      border: 1px solid var(--border2);
+      border-radius: 3px;
+      background: var(--bg);
+    }
+
+    .add-crit-form input[type="number"]:focus {
+      outline: none;
+      border-color: var(--saffron);
+    }
+
+    .cat-select {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.72rem;
+      padding: 0.32rem 0.55rem;
+      border: 1px solid var(--border2);
+      border-radius: 3px;
+      background: var(--card);
+      color: var(--ink);
+      cursor: pointer;
+    }
+
+    .cat-select:focus {
+      outline: none;
+      border-color: var(--saffron);
+    }
+
+    .wt-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      padding: 0.65rem 1.3rem;
+      background: var(--bg);
+      border-top: 1px solid var(--border);
+    }
+
+    .wt-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.63rem;
+      color: var(--muted);
+    }
+
+    .wt-track {
+      flex: 1;
+      height: 4px;
+      background: var(--border);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .wt-fill {
+      height: 100%;
+      border-radius: 2px;
+      background: var(--saffron);
+      transition: width 0.3s, background 0.3s;
+    }
+
+    .wt-num {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      min-width: 38px;
+    }
+
+    .wt-num.ok {
+      color: var(--sage);
+    }
+
+    .wt-num.over {
+      color: var(--rust);
+    }
+
+    .tot-label {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.95rem;
+      color: var(--parchment);
+    }
+
+    .tot-cell {
+      text-align: center;
+    }
+
+    .tot-num {
+      font-family: 'DM Mono', monospace;
+      font-size: 1.15rem;
+      display: block;
+      color: var(--ink2);
+    }
+
+    .tot-pct {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.58rem;
+      color: var(--muted);
+      display: block;
+    }
+
+    .tot-cell.winner .tot-num {
+      color: var(--gold);
+    }
+
+    /* NOTES */
+    .notes-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1.1rem 1.3rem;
+      margin-bottom: 1.3rem;
+    }
+
+    .notes-section h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.98rem;
+      color: var(--parchment);
+      margin-bottom: 0.8rem;
+    }
+
+    .notes-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.9rem;
+    }
+
+    .note-block label {
+      font-size: 0.63rem;
+      font-weight: 600;
+      color: var(--muted);
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 0.32rem;
+      margin-bottom: 0.28rem;
+    }
+
+    textarea {
+      width: 100%;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.76rem;
+      padding: 0.5rem 0.65rem;
+      border: 1px solid var(--border2);
+      border-radius: 3px;
+      background: var(--card);
+      color: var(--ink);
+      resize: vertical;
+      min-height: 68px;
+      line-height: 1.45;
+    }
+
+    textarea:focus {
+      outline: none;
+      border-color: var(--saffron);
+    }
+
+    /* SUBMIT */
+    .submit-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1.3rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .submit-info h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem;
+      color: var(--parchment);
+      margin-bottom: 0.2rem;
+    }
+
+    .submit-info p {
+      font-size: 0.74rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .submit-btns {
+      display: flex;
+      gap: 0.7rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    /* SUBMIT STATUS */
+    .submit-status {
+      display: none;
+      padding: 0.65rem 1.2rem;
+      border-radius: 4px;
+      font-size: 0.78rem;
+      margin-top: 0.8rem;
+      line-height: 1.5;
+    }
+
+    .submit-status.success {
+      background: rgba(107, 158, 110, 0.1);
+      border: 1px solid rgba(107, 158, 110, 0.3);
+      color: var(--sage);
+      display: block;
+    }
+
+    .submit-status.error {
+      background: rgba(192, 74, 46, 0.1);
+      border: 1px solid rgba(192, 74, 46, 0.3);
+      color: #E06050;
+      display: block;
+    }
+
+    .submit-status.loading {
+      background: rgba(232, 135, 42, 0.08);
+      border: 1px solid rgba(232, 135, 42, 0.2);
+      color: var(--saffron);
+      display: block;
+    }
+
+    @media(max-width:700px) {
+      .setup-strip {
+        grid-template-columns: 1fr;
+      }
+
+      .notes-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .mini-result {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media print {
+
+      .submit-section,
+      .header-nav,
+      .rm-btn,
+      .add-row,
+      .btn {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <div class="logo">
+      <div class="logo-mark">YS</div>
+      <div class="logo-text">
+        <h1>YSTCA 2026 — My Scorecard</h1>
+        <p>Individual Evaluator · Beneficiary Selection</p>
+      </div>
+    </div>
+    <div class="header-nav">
+      <a href="index.html" class="btn btn-ghost btn-sm">← Home</a>
+      <a href="aggregator.html" class="btn btn-ghost btn-sm">View Results →</a>
+    </div>
+  </header>
+
+  <div class="container">
+
+    <div class="autosave-bar warn" id="autosaveBar">
+      <div class="autosave-dot"></div>
+      <span id="autosaveText">Scores auto-saved to this browser. Submit when done to share with the group.</span>
+    </div>
+
+    <!-- SETUP -->
+    <div class="label">Step 1 — Your Details & Candidates</div>
+    <div class="setup-strip">
+      <div class="field">
+        <label>Your Name & Role</label>
+        <div class="ev-row">
+          <input type="text" id="evName" placeholder="e.g. Priya Sharma" oninput="saveLocal();syncAll()">
+          <div class="role-pill parent" id="rolePill" onclick="cycleRole()">Parent</div>
+        </div>
+      </div>
+      <div class="field"><label><span class="dot da"></span> Candidate A</label><input type="text" id="nameA"
+          value="Maitri" oninput="saveLocal();syncAll()"></div>
+      <div class="field"><label><span class="dot db"></span> Candidate B</label><input type="text" id="nameB"
+          value="PRAGNYA" oninput="saveLocal();syncAll()"></div>
+      <div class="field"><label><span class="dot dc"></span> Candidate C</label><input type="text" id="nameC"
+          value="Grail Family Services" oninput="saveLocal();syncAll()"></div>
+    </div>
+
+    <!-- MINI RESULTS -->
+    <div class="label">Live Score Summary</div>
+    <div class="mini-result" id="miniResult"></div>
+
+    <!-- CRITERIA TABLE -->
+    <div class="criteria-panel">
+      <div class="criteria-hdr">
+        <div class="criteria-hdr-left">
+          <h2>Criteria & Scoring</h2>
+          <p>Add, remove, or reweight criteria. Weights must total 100%.</p>
+        </div>
+        <div class="preset-row">
+          <span class="preset-lbl">Preset:</span>
+          <button class="pbtn on" onclick="applyPreset('balanced',this)">Balanced</button>
+          <button class="pbtn" onclick="applyPreset('mission',this)">Mission</button>
+          <button class="pbtn" onclick="applyPreset('fundraising',this)">Fundraising</button>
+          <button class="pbtn" onclick="applyPreset('community',this)">Community</button>
+        </div>
+      </div>
+      <table class="ct" id="critTable">
+        <thead>
+          <tr>
+            <th style="width:33%">Criteria</th>
+            <th style="width:8%">Weight %</th>
+            <th class="cth"><span class="dot da" style="margin-right:3px"></span><span class="dn-a">Maitri</span></th>
+            <th class="cth"><span class="dot db" style="margin-right:3px"></span><span class="dn-b">PRAGNYA</span></th>
+            <th class="cth"><span class="dot dc" style="margin-right:3px"></span><span class="dn-c">Grail Family
+                Services</span></th>
+            <th style="width:28px"></th>
+          </tr>
+        </thead>
+        <tbody id="critBody"></tbody>
+        <tfoot id="critFoot"></tfoot>
+      </table>
+      <div class="wt-bar">
+        <span class="wt-label">Weight total:</span>
+        <div class="wt-track">
+          <div class="wt-fill" id="wtFill" style="width:100%"></div>
+        </div>
+        <span class="wt-num ok" id="wtNum">100%</span>
+      </div>
+    </div>
+
+    <!-- NOTES -->
+    <div class="notes-section">
+      <h2>Overall Notes & Rationale</h2>
+      <div class="notes-grid">
+        <div class="note-block"><label><span class="dot da"></span><span class="dn-a">Maitri</span></label><textarea
+            id="noteA" placeholder="Key observations…" oninput="saveLocal()"></textarea></div>
+        <div class="note-block"><label><span class="dot db"></span><span class="dn-b">PRAGNYA</span></label><textarea
+            id="noteB" placeholder="Key observations…" oninput="saveLocal()"></textarea></div>
+        <div class="note-block"><label><span class="dot dc"></span><span class="dn-c">Grail</span></label><textarea
+            id="noteC" placeholder="Key observations…" oninput="saveLocal()"></textarea></div>
+      </div>
+    </div>
+
+    <!-- SUBMIT -->
+    <div class="submit-section">
+      <div class="submit-info">
+        <h3>Submit to Group Results</h3>
+        <p>Your score will be saved to Google Sheets and appear in the live aggregator immediately.</p>
+      </div>
+      <div class="submit-btns">
+        <button class="btn btn-ghost" onclick="resetAll()">Reset</button>
+        <button class="btn btn-ghost" onclick="window.print()">Print / PDF</button>
+        <button class="btn btn-sage" onclick="submitScore()" id="submitBtn">Submit My Score →</button>
+      </div>
+    </div>
+    <div class="submit-status" id="submitStatus"></div>
+
+  </div>
+
+  <script>
+    // ══════════════════════════════════════════════════════════════════════════════
+    // !! CONFIGURATION — paste your Apps Script URL here after deployment !!
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzOb8sXF3S9dFrtPUay_wQ_gOLNK3RKS6ZliAD6ZH17CNGC0JIcGCumqALWD0evCCM_/exec";
+    // ══════════════════════════════════════════════════════════════════════════════
+
+    const CATS = ['Mission Alignment', 'Org Quality', 'Fundraising', 'Partnership'];
+    const DEFAULT_CRITERIA = [
+      { id: 'c1', cat: 'Mission Alignment', name: 'Cause-Community Fit', desc: 'Resonates with YSTCA\'s South Asian Bay Area donor & performer base?', w: 12 },
+      { id: 'c2', cat: 'Mission Alignment', name: 'Category Rotation', desc: 'Fresh cause not recently covered? (2025=Cultural Arts, 2024=Clothing)', w: 8 },
+      { id: 'c3', cat: 'Mission Alignment', name: 'Youth Relatability', desc: 'Can the team personally connect to and articulate this cause?', w: 8 },
+      { id: 'c4', cat: 'Org Quality', name: 'Local Bay Area Footprint', desc: 'Rooted in SF Bay Area (Santa Clara / Alameda / Contra Costa)?', w: 10 },
+      { id: 'c5', cat: 'Org Quality', name: 'Size & Impact Ratio', desc: 'Small enough that $20K–$35K creates a visible, meaningful difference?', w: 10 },
+      { id: 'c6', cat: 'Org Quality', name: 'Financial Transparency', desc: 'Public 990 filings, Charity Navigator rating, or clear financials?', w: 6 },
+      { id: 'c7', cat: 'Org Quality', name: 'Track Record', desc: 'Established 3+ years with demonstrated programs and outcomes?', w: 6 },
+      { id: 'c8', cat: 'Fundraising', name: 'Donor Story Power', desc: 'Compelling, emotional narratives that move donors to give?', w: 10 },
+      { id: 'c9', cat: 'Fundraising', name: 'Sponsorship Appeal', desc: 'Corporate sponsors find this cause brand-safe and attractive?', w: 8 },
+      { id: 'c10', cat: 'Fundraising', name: 'Company Match Eligibility', desc: 'Registered on Benevity/Causecast employer matching platforms?', w: 6 },
+      { id: 'c11', cat: 'Partnership', name: 'Org Responsiveness', desc: 'Responded positively / shown interest in partnering with YSTCA?', w: 8 },
+      { id: 'c12', cat: 'Partnership', name: 'Prior YSTCA Relationship', desc: 'Existing connection (past beneficiary, volunteer, personal link)?', w: 4 },
+      { id: 'c13', cat: 'Partnership', name: 'Co-Promotion Capacity', desc: 'Can org actively promote the event to their own audience?', w: 4 },
+    ];
+    const PRESETS = {
+      balanced: { c1: 12, c2: 8, c3: 8, c4: 10, c5: 10, c6: 6, c7: 6, c8: 10, c9: 8, c10: 6, c11: 8, c12: 4, c13: 4 },
+      mission: { c1: 18, c2: 12, c3: 12, c4: 12, c5: 10, c6: 4, c7: 4, c8: 8, c9: 6, c10: 4, c11: 6, c12: 2, c13: 2 },
+      fundraising: { c1: 8, c2: 4, c3: 6, c4: 6, c5: 8, c6: 6, c7: 4, c8: 16, c9: 14, c10: 10, c11: 10, c12: 4, c13: 4 },
+      community: { c1: 16, c2: 6, c3: 10, c4: 14, c5: 12, c6: 4, c7: 4, c8: 10, c9: 6, c10: 4, c11: 8, c12: 2, c13: 4 },
+    };
+    const COLORS = { A: '#E8872A', B: '#6B9E6E', C: '#D4A832' };
+
+    let criteria = JSON.parse(JSON.stringify(DEFAULT_CRITERIA));
+    let scores = {};
+    criteria.forEach(c => scores[c.id] = { A: 0, B: 0, C: 0 });
+    let critCounter = 20;
+    let evRole = 'parent';
+    const ROLES = ['parent', 'advisor', 'student'];
+
+    const gv = id => document.getElementById(id)?.value || '';
+    const nA = () => gv('nameA') || 'A';
+    const nB = () => gv('nameB') || 'B';
+    const nC = () => gv('nameC') || 'C';
+    const gw = cid => { const el = document.getElementById('w-' + cid); return el ? (parseFloat(el.value) || 0) : 0; };
+    const totalW = () => criteria.reduce((s, c) => s + gw(c.id), 0);
+
+    // ── LOCAL STORAGE ─────────────────────────────────────────────────────────────
+    function saveLocal() {
+      try {
+        localStorage.setItem('ystca_scorecard', JSON.stringify({
+          evName: gv('evName'), evRole, nameA: gv('nameA'), nameB: gv('nameB'), nameC: gv('nameC'),
+          criteria: criteria.map(c => ({ ...c, w: gw(c.id) })),
+          scores, noteA: gv('noteA'), noteB: gv('noteB'), noteC: gv('noteC')
+        }));
+      } catch (e) { }
+    }
+    function loadLocal() {
+      try {
+        const saved = localStorage.getItem('ystca_scorecard');
+        if (!saved) return;
+        const d = JSON.parse(saved);
+        if (d.evName) document.getElementById('evName').value = d.evName;
+        if (d.evRole) { evRole = d.evRole; const p = document.getElementById('rolePill'); p.textContent = evRole.charAt(0).toUpperCase() + evRole.slice(1); p.className = 'role-pill ' + evRole; }
+        if (d.nameA) document.getElementById('nameA').value = d.nameA;
+        if (d.nameB) document.getElementById('nameB').value = d.nameB;
+        if (d.nameC) document.getElementById('nameC').value = d.nameC;
+        if (d.criteria) criteria = d.criteria;
+        if (d.scores) scores = d.scores;
+        if (d.noteA) document.getElementById('noteA').value = d.noteA;
+        if (d.noteB) document.getElementById('noteB').value = d.noteB;
+        if (d.noteC) document.getElementById('noteC').value = d.noteC;
+      } catch (e) { }
+    }
+
+    // ── ROLE CYCLE ────────────────────────────────────────────────────────────────
+    function cycleRole() {
+      const i = ROLES.indexOf(evRole); evRole = ROLES[(i + 1) % ROLES.length];
+      const p = document.getElementById('rolePill'); p.textContent = evRole.charAt(0).toUpperCase() + evRole.slice(1); p.className = 'role-pill ' + evRole;
+      saveLocal();
+    }
+
+    // ── RENDER ────────────────────────────────────────────────────────────────────
+    function renderTable() {
+      const tbody = document.getElementById('critBody'); tbody.innerHTML = '';
+      let lc = '';
+      criteria.forEach(c => {
+        if (c.cat !== lc) { lc = c.cat; const tr = document.createElement('tr'); tr.className = 'cat-hdr'; tr.innerHTML = `<td colspan="6">${c.cat}</td>`; tbody.appendChild(tr); }
+        const tr = document.createElement('tr'); tr.className = 'crit-row';
+        tr.innerHTML = `
+      <td><div class="cn">${c.name}</div><div class="cd">${c.desc}</div></td>
+      <td><div class="w-wrap"><input type="number" class="wnum" id="w-${c.id}" value="${c.w}" min="0" max="100" oninput="onWChange()"><span class="wpct">%</span></div></td>
+      <td class="scell" id="sc-${c.id}-A">${starsHtml(c.id, 'A')}</td>
+      <td class="scell" id="sc-${c.id}-B">${starsHtml(c.id, 'B')}</td>
+      <td class="scell" id="sc-${c.id}-C">${starsHtml(c.id, 'C')}</td>
+      <td><button class="rm-btn" onclick="rmCrit('${c.id}')">✕</button></td>`;
+        tbody.appendChild(tr);
+      });
+      const addTr = document.createElement('tr'); addTr.className = 'add-row';
+      addTr.innerHTML = `<td colspan="6"><div class="add-crit-form">
+    <select class="cat-select" id="newCat">${CATS.map(c => `<option>${c}</option>`).join('')}</select>
+    <input type="text" class="c-name" id="newName" placeholder="Criteria name">
+    <input type="text" class="c-desc" id="newDesc" placeholder="Short description (optional)">
+    <input type="number" id="newW" value="5" min="0" max="100">
+    <button class="btn btn-ghost btn-sm" onclick="addCrit()">+ Add</button>
+  </div></td>`;
+      tbody.appendChild(addTr);
+      renderFoot(); updateWBar(); updateMini();
+    }
+    function renderFoot() {
+      const tf = document.getElementById('critFoot');
+      const t = calcTotals(); const s = ['A', 'B', 'C'].sort((x, y) => t[y] - t[x]); const mw = totalW();
+      tf.innerHTML = `<tr><td><span class="tot-label">Weighted Total</span></td><td></td>${['A', 'B', 'C'].map(k => {
+        const p = mw > 0 ? (t[k] / mw * 100).toFixed(1) : '0.0';
+        return `<td class="tot-cell ${k === s[0] ? 'winner' : ''}"><span class="tot-num">${t[k].toFixed(1)}</span><span class="tot-pct">${p}%</span></td>`;
+      }).join('')}<td></td></tr>`;
+    }
+    function starsHtml(cid, cand) {
+      const cur = scores[cid]?.[cand] || 0; const cl = cand.toLowerCase();
+      let h = `<div class="stars">`;
+      for (let i = 1; i <= 5; i++)h += `<span class="star ${i <= cur ? 's' + cl : ''}" onclick="setStar('${cid}','${cand}',${i})">★</span>`;
+      return h + `</div><div class="sn">${cur}/5</div>`;
+    }
+    function setStar(cid, cand, val) {
+      if (!scores[cid]) scores[cid] = { A: 0, B: 0, C: 0 };
+      scores[cid][cand] = scores[cid][cand] === val ? 0 : val;
+      document.getElementById(`sc-${cid}-${cand}`).innerHTML = starsHtml(cid, cand);
+      renderFoot(); updateMini(); saveLocal();
+    }
+    function addCrit() {
+      const name = gv('newName').trim(); if (!name) { document.getElementById('newName').focus(); return; }
+      const cid = 'cx' + critCounter++;
+      criteria.push({ id: cid, cat: gv('newCat') || CATS[0], name, desc: gv('newDesc') || '', w: parseFloat(gv('newW')) || 5 });
+      scores[cid] = { A: 0, B: 0, C: 0 };
+      document.getElementById('newName').value = ''; document.getElementById('newDesc').value = '';
+      renderTable(); saveLocal();
+    }
+    function rmCrit(cid) { criteria = criteria.filter(c => c.id !== cid); delete scores[cid]; renderTable(); saveLocal(); }
+    function onWChange() { updateWBar(); renderFoot(); updateMini(); saveLocal(); document.querySelectorAll('.pbtn').forEach(b => b.classList.remove('on')); }
+    function updateWBar() {
+      const t = totalW(); const pct = Math.min(t, 100);
+      document.getElementById('wtFill').style.cssText = `width:${pct}%;background:${t === 100 ? 'var(--sage)' : t > 100 ? 'var(--rust)' : 'var(--saffron)'}`;
+      const el = document.getElementById('wtNum'); el.textContent = t + '%'; el.className = 'wt-num ' + (t === 100 ? 'ok' : t > 100 ? 'over' : '');
+    }
+    function applyPreset(name, btn) {
+      const p = PRESETS[name]; if (!p) return;
+      criteria.forEach(c => { if (p[c.id] !== undefined) { const el = document.getElementById('w-' + c.id); if (el) el.value = p[c.id]; c.w = p[c.id]; } });
+      document.querySelectorAll('.pbtn').forEach(b => b.classList.remove('on')); btn.classList.add('on');
+      updateWBar(); renderFoot(); updateMini(); saveLocal();
+    }
+    function calcTotals() {
+      let t = { A: 0, B: 0, C: 0 };
+      criteria.forEach(c => { const w = gw(c.id);['A', 'B', 'C'].forEach(k => { t[k] += (scores[c.id]?.[k] || 0) / 5 * w; }); });
+      return t;
+    }
+    function updateMini() {
+      const t = calcTotals(); const mw = totalW(); const s = ['A', 'B', 'C'].sort((x, y) => t[y] - t[x]);
+      const names = { A: nA(), B: nB(), C: nC() }; const ranks = { [s[0]]: '1st', [s[1]]: '2nd', [s[2]]: '3rd' };
+      document.getElementById('miniResult').innerHTML = ['A', 'B', 'C'].map(k => {
+        const pct = mw > 0 ? (t[k] / mw * 100) : 0; const isTop = k === s[0];
+        return `<div class="mini-card ${isTop ? 'top' : ''}"><div class="mini-rank">${ranks[k]} Place</div><div class="mini-name">${names[k]}</div><div class="mini-score">${t[k].toFixed(1)}</div><div class="mini-pct">${pct.toFixed(1)}% of max</div><div class="mini-bar-wrap"><div class="mini-bar-fill" style="width:${pct}%;background:${COLORS[k]}"></div></div></div>`;
+      }).join('');
+    }
+    function syncAll() {
+      document.querySelectorAll('.dn-a').forEach(e => e.textContent = nA());
+      document.querySelectorAll('.dn-b').forEach(e => e.textContent = nB());
+      document.querySelectorAll('.dn-c').forEach(e => e.textContent = nC());
+      updateMini();
+    }
+    function resetAll() {
+      if (!confirm('Reset all scores?')) return;
+      criteria = JSON.parse(JSON.stringify(DEFAULT_CRITERIA));
+      scores = {}; criteria.forEach(c => scores[c.id] = { A: 0, B: 0, C: 0 });
+      localStorage.removeItem('ystca_scorecard');
+      renderTable();
+    }
+
+    // ── SUBMIT TO SHEETS ──────────────────────────────────────────────────────────
+    function buildPayload() {
+      const t = calcTotals(); const mw = totalW();
+      return {
+        evaluator: { name: gv('evName') || 'Anonymous', role: evRole },
+        candidates: { A: nA(), B: nB(), C: nC() },
+        criteria: criteria.map(c => ({ id: c.id, cat: c.cat, name: c.name, weight: gw(c.id), scores: scores[c.id] || { A: 0, B: 0, C: 0 } })),
+        totals: {
+          A: { raw: +t.A.toFixed(2), pct: mw > 0 ? +(t.A / mw * 100).toFixed(2) : 0 },
+          B: { raw: +t.B.toFixed(2), pct: mw > 0 ? +(t.B / mw * 100).toFixed(2) : 0 },
+          C: { raw: +t.C.toFixed(2), pct: mw > 0 ? +(t.C / mw * 100).toFixed(2) : 0 },
+        },
+        notes: { A: gv('noteA'), B: gv('noteB'), C: gv('noteC') },
+        timestamp: new Date().toISOString(),
+        weightTotal: mw
+      };
+    }
+
+    async function submitScore() {
+      const statusEl = document.getElementById('submitStatus');
+      const submitBtn = document.getElementById('submitBtn');
+
+      if (!gv('evName').trim()) {
+        statusEl.className = 'submit-status error';
+        statusEl.textContent = '⚠ Please enter your name before submitting.'; return;
+      }
+      if (totalW() !== 100) {
+        statusEl.className = 'submit-status error';
+        statusEl.textContent = `⚠ Weights total ${totalW()}% — they must equal 100% before submitting.`; return;
+      }
+      if (APPS_SCRIPT_URL === 'YOUR_APPS_SCRIPT_URL_HERE') {
+        statusEl.className = 'submit-status error';
+        statusEl.textContent = '⚠ Apps Script URL not configured. See SETUP.md.'; return;
+      }
+
+      statusEl.className = 'submit-status loading';
+      statusEl.textContent = '⏳ Submitting your scores…';
+      submitBtn.disabled = true;
+
+      try {
+        const payload = buildPayload();
+        const res = await fetch(APPS_SCRIPT_URL, {
+          method: 'POST',
+          body: JSON.stringify({ action: 'submit_score', payload }),
+        });
+        const data = await res.json();
+        if (data.ok) {
+          statusEl.className = 'submit-status success';
+          statusEl.textContent = `✓ Score submitted successfully! Your scores are now live in the aggregator. Evaluator: ${payload.evaluator.name}`;
+          submitBtn.textContent = '✓ Submitted';
+          document.getElementById('autosaveBar').className = 'autosave-bar';
+          document.getElementById('autosaveText').textContent = 'Score submitted to Google Sheets ✓';
+        } else throw new Error(data.message);
+      } catch (err) {
+        statusEl.className = 'submit-status error';
+        statusEl.textContent = `⚠ Submission failed: ${err.message}. Check your Apps Script URL or try again.`;
+        submitBtn.disabled = false;
+      }
+    }
+
+    // ── INIT ──────────────────────────────────────────────────────────────────────
+    loadLocal();
+    renderTable();
+    syncAll();
+  </script>
+</body>
+
+</html>
