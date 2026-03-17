@@ -4,25 +4,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>YSTCA 2026 — Live Results</title>
+  <title>YSTCA 2026 — My Scorecard</title>
   <link
     href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap"
     rel="stylesheet">
   <style>
     :root {
-      --bg: #F5F1EB;
-      --surface: #FFFFFF;
-      --card: #FAF7F2;
-      --border: #DDD6C8;
-      --border2: #C8C0B0;
-      --saffron: #C86A18;
-      --gold: #A8820A;
-      --sage: #3A7040;
-      --rust: #A03018;
-      --ink: #1A1610;
-      --ink2: #4A4438;
-      --muted: #7A7268;
-      --shadow: rgba(26, 22, 16, 0.08);
+      --bg: #0F0E0C;
+      --surface: #1A1814;
+      --card: #211F1B;
+      --border: #2E2B25;
+      --border2: #3A3630;
+      --saffron: #E8872A;
+      --gold: #D4A832;
+      --sage: #6B9E6E;
+      --rust: #C04A2E;
+      --parchment: #F2EBE0;
+      --muted: #7A7368;
+      --ink: #E8E2D8;
+      --ink2: #B8B0A4;
+      --shadow: rgba(0, 0, 0, 0.4);
     }
 
     * {
@@ -39,7 +40,7 @@
     }
 
     header {
-      background: var(--ink);
+      background: var(--surface);
       border-bottom: 3px solid var(--saffron);
       padding: 1.1rem 2rem;
       display: flex;
@@ -69,7 +70,7 @@
 
     .logo-text h1 {
       font-family: 'Cormorant Garamond', serif;
-      color: #F5F1EB;
+      color: var(--parchment);
       font-size: 1.15rem;
       font-weight: 600;
     }
@@ -93,31 +94,20 @@
       font-family: 'DM Sans', sans-serif;
       font-size: 0.76rem;
       font-weight: 600;
-      padding: 0.42rem 0.9rem;
+      padding: 0.45rem 1rem;
       border-radius: 3px;
       cursor: pointer;
       border: none;
       transition: all 0.15s;
     }
 
-    .btn-light {
-      background: transparent;
-      color: #F5F1EB;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-    }
-
-    .btn-light:hover {
-      border-color: var(--saffron);
-      color: var(--saffron);
-    }
-
-    .btn-ink {
-      background: var(--ink);
+    .btn-saffron {
+      background: var(--saffron);
       color: white;
     }
 
-    .btn-ink:hover {
-      background: #2C2418;
+    .btn-saffron:hover {
+      background: #C87020;
     }
 
     .btn-ghost {
@@ -131,9 +121,20 @@
       color: var(--saffron);
     }
 
+    .btn-sage {
+      background: var(--sage);
+      color: white;
+      font-size: 0.9rem;
+      padding: 0.7rem 1.8rem;
+    }
+
+    .btn-sage:hover {
+      background: #5A8D5D;
+    }
+
     .btn-sm {
       font-size: 0.68rem;
-      padding: 0.3rem 0.7rem;
+      padding: 0.32rem 0.7rem;
     }
 
     .container {
@@ -151,664 +152,727 @@
       margin-bottom: 0.45rem;
     }
 
-    /* LIVE BAR */
-    .live-bar {
-      background: var(--ink);
-      padding: 0.6rem 1.3rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 0.6rem;
-    }
-
-    .live-indicator {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
+    /* AUTOSAVE BANNER */
+    .autosave-bar {
+      background: rgba(107, 158, 110, 0.08);
+      border: 1px solid rgba(107, 158, 110, 0.2);
+      border-radius: 4px;
+      padding: 0.5rem 1rem;
+      margin-bottom: 1.2rem;
       font-size: 0.72rem;
-      color: rgba(245, 241, 235, 0.6);
+      color: var(--sage);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
     }
 
-    .live-dot {
-      width: 7px;
-      height: 7px;
+    .autosave-bar.warn {
+      background: rgba(232, 135, 42, 0.08);
+      border-color: rgba(232, 135, 42, 0.2);
+      color: var(--saffron);
+    }
+
+    .autosave-dot {
+      width: 6px;
+      height: 6px;
       border-radius: 50%;
-      background: #3A7040;
-      animation: pulse 2s infinite;
+      background: var(--sage);
+      flex-shrink: 0;
     }
 
-    @keyframes pulse {
-
-      0%,
-      100% {
-        opacity: 1
-      }
-
-      50% {
-        opacity: 0.4
-      }
+    .autosave-bar.warn .autosave-dot {
+      background: var(--saffron);
     }
 
-    .live-dot.offline {
-      background: #7A7268;
-      animation: none;
-    }
-
-    .live-controls {
-      display: flex;
-      gap: 0.5rem;
-      align-items: center;
-    }
-
-    .refresh-btn {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.62rem;
-      padding: 0.2rem 0.6rem;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      border-radius: 2px;
-      background: transparent;
-      color: rgba(245, 241, 235, 0.5);
-      cursor: pointer;
-      transition: all 0.15s;
-    }
-
-    .refresh-btn:hover {
-      border-color: var(--saffron);
-      color: var(--saffron);
-    }
-
-    /* ROLE WEIGHTS */
-    .rw-panel {
+    /* SETUP STRIP */
+    .setup-strip {
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 6px;
-      padding: 1rem 1.3rem;
+      padding: 1.1rem 1.4rem;
       margin-bottom: 1.3rem;
-      box-shadow: 0 1px 4px var(--shadow);
-      display: flex;
-      align-items: center;
-      gap: 2rem;
-      flex-wrap: wrap;
-    }
-
-    .rw-title {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 0.98rem;
-      color: var(--ink);
-      white-space: nowrap;
-    }
-
-    .rw-items {
-      display: flex;
-      gap: 1.2rem;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-
-    .rw-item {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 0.75rem;
-      color: var(--ink2);
-    }
-
-    input.rw {
-      width: 50px;
-      text-align: center;
-      font-family: 'DM Mono', monospace;
-      font-size: 0.88rem;
-      color: var(--saffron);
-      padding: 0.28rem 0.35rem;
-      border: 1px solid var(--border2);
-      border-radius: 3px;
-      background: var(--card);
-    }
-
-    input.rw:focus {
-      outline: none;
-      border-color: var(--saffron);
-    }
-
-    .rw-note {
-      font-size: 0.68rem;
-      color: var(--muted);
-      margin-left: auto;
-    }
-
-    /* EV STATUS */
-    .ev-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(185px, 1fr));
-      gap: 0.7rem;
-      margin-bottom: 1.3rem;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      gap: 0.9rem;
+      align-items: end;
     }
 
-    .ev-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 5px;
-      padding: 0.85rem 1rem;
-      box-shadow: 0 1px 3px var(--shadow);
-    }
-
-    .ev-card-name {
-      font-weight: 600;
-      font-size: 0.83rem;
-      margin-bottom: 0.12rem;
-    }
-
-    .ev-card-role {
-      font-size: 0.65rem;
-      color: var(--muted);
-      margin-bottom: 0.5rem;
-    }
-
-    .ev-scores {
-      display: flex;
-      gap: 0.4rem;
-    }
-
-    .ev-score-chip {
-      flex: 1;
-      text-align: center;
-      padding: 0.28rem;
-      border-radius: 3px;
-      background: var(--card);
-    }
-
-    .ev-score-chip .sc-lbl {
-      font-size: 0.56rem;
-      color: var(--muted);
-      display: block;
-      margin-bottom: 0.1rem;
-    }
-
-    .ev-score-chip .sc-val {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.82rem;
-      font-weight: 600;
-      color: var(--ink2);
-    }
-
-    .ev-score-chip.winner {
-      background: rgba(200, 106, 24, 0.08);
-      border: 1px solid rgba(200, 106, 24, 0.2);
-    }
-
-    .ev-score-chip.winner .sc-val {
-      color: var(--saffron);
-    }
-
-    .ev-winner-note {
-      font-size: 0.65rem;
-      color: var(--muted);
-      padding-top: 0.4rem;
-      border-top: 1px solid var(--border);
-      margin-top: 0.4rem;
-    }
-
-    /* MAIN RESULTS */
-    .results-panel {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      overflow: hidden;
-      margin-bottom: 1.3rem;
-      box-shadow: 0 2px 8px var(--shadow);
-    }
-
-    .rp-header {
-      background: var(--ink);
-      padding: 0.9rem 1.4rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .rp-header h2 {
-      font-family: 'Cormorant Garamond', serif;
-      color: #F5F1EB;
-      font-size: 1.05rem;
-    }
-
-    .rp-meta {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.62rem;
-      color: rgba(245, 241, 235, 0.4);
-    }
-
-    .rp-body {
-      display: grid;
-      grid-template-columns: 1.7fr 1fr;
-    }
-
-    .bars-side {
-      padding: 1.4rem;
-      border-right: 1px solid var(--border);
-    }
-
-    .abar-row {
-      margin-bottom: 1rem;
-    }
-
-    .abar-meta {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      margin-bottom: 0.3rem;
-    }
-
-    .abar-name {
-      font-weight: 600;
-      font-size: 0.86rem;
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-    }
-
-    .arank {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.6rem;
-      color: var(--muted);
-    }
-
-    .leader-tag {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.58rem;
-      padding: 0.1rem 0.38rem;
-      border-radius: 2px;
-      background: rgba(200, 106, 24, 0.1);
-      color: var(--saffron);
-    }
-
-    .abar-track {
-      height: 9px;
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 5px;
-      overflow: hidden;
-    }
-
-    .abar-fill {
-      height: 100%;
-      border-radius: 5px;
-      transition: width 0.6s cubic-bezier(.4, 0, .2, 1);
-    }
-
-    .fa {
-      background: linear-gradient(90deg, #C86A18, #E09040);
-    }
-
-    .fb {
-      background: linear-gradient(90deg, #3A7040, #5A9060);
-    }
-
-    .fc {
-      background: linear-gradient(90deg, #A8820A, #C8A830);
-    }
-
-    .abar-pct {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.8rem;
-      font-weight: 600;
-    }
-
-    .votes-row {
-      margin-top: 1rem;
-      padding-top: 1rem;
-      border-top: 1px solid var(--border);
-      font-size: 0.7rem;
-      color: var(--muted);
-    }
-
-    .verdict-side {
-      background: var(--ink);
-      padding: 1.4rem;
+    .field {
       display: flex;
       flex-direction: column;
+      gap: 0.2rem;
     }
 
-    .v-lbl {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.58rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--saffron);
-      margin-bottom: 0.35rem;
-    }
-
-    .v-name {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.45rem;
-      color: #F5F1EB;
-      line-height: 1.2;
-      margin-bottom: 0.5rem;
-      flex-grow: 1;
-    }
-
-    .v-score {
-      font-family: 'DM Mono', monospace;
-      font-size: 1.9rem;
-      color: #C8A830;
-    }
-
-    .v-sub {
-      font-family: 'DM Mono', monospace;
+    .field label {
       font-size: 0.63rem;
-      color: rgba(200, 106, 24, 0.7);
-    }
-
-    .v-margin {
-      margin-top: 0.9rem;
-      padding-top: 0.9rem;
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
-      font-size: 0.68rem;
-      color: rgba(245, 241, 235, 0.38);
-      line-height: 1.6;
-    }
-
-    .agree-badge {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.6rem;
-      padding: 0.12rem 0.42rem;
-      border-radius: 2px;
-    }
-
-    .ab-s {
-      background: rgba(58, 112, 64, 0.25);
-      color: #5A9060;
-    }
-
-    .ab-m {
-      background: rgba(200, 106, 24, 0.2);
-      color: #E09040;
-    }
-
-    .ab-x {
-      background: rgba(160, 48, 24, 0.2);
-      color: #D06050;
-    }
-
-    /* BREAKDOWN TABLES */
-    .section-panel {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      margin-bottom: 1.3rem;
-      box-shadow: 0 1px 4px var(--shadow);
-      overflow: hidden;
-    }
-
-    .sp-header {
-      padding: 0.85rem 1.3rem;
-      border-bottom: 1px solid var(--border);
-      background: var(--card);
-    }
-
-    .sp-header h2 {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 0.98rem;
-      color: var(--ink);
-    }
-
-    .sp-body {
-      padding: 1.2rem 1.3rem;
-      overflow-x: auto;
-    }
-
-    table.bk {
-      width: 100%;
-      border-collapse: collapse;
-      min-width: 480px;
-    }
-
-    table.bk th {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.57rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
+      font-weight: 600;
       color: var(--muted);
-      padding: 0.5rem 0.8rem;
-      background: var(--card);
-      border-bottom: 1px solid var(--border);
-      text-align: left;
-    }
-
-    table.bk th.num {
-      text-align: center;
-    }
-
-    table.bk td {
-      padding: 0.6rem 0.8rem;
-      border-bottom: 1px solid var(--border);
-      font-size: 0.79rem;
-    }
-
-    table.bk td.num {
-      text-align: center;
-      font-family: 'DM Mono', monospace;
-      font-size: 0.75rem;
-    }
-
-    table.bk tr:hover {
-      background: var(--card);
-    }
-
-    table.bk tr.agg-row {
-      background: rgba(200, 106, 24, 0.04);
-      border-top: 2px solid var(--border2);
-    }
-
-    .chip {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.57rem;
-      padding: 0.1rem 0.38rem;
-      border-radius: 2px;
-      margin-left: 0.28rem;
-    }
-
-    .cha {
-      background: rgba(200, 106, 24, 0.1);
-      color: var(--saffron);
-    }
-
-    .chb {
-      background: rgba(58, 112, 64, 0.1);
-      color: var(--sage);
-    }
-
-    .chc {
-      background: rgba(168, 130, 10, 0.1);
-      color: var(--gold);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
     }
 
     .dot {
       display: inline-block;
-      width: 7px;
-      height: 7px;
+      width: 8px;
+      height: 8px;
       border-radius: 50%;
     }
 
     .da {
-      background: #C86A18;
+      background: #E8872A;
     }
 
     .db {
-      background: #3A7040;
+      background: #6B9E6E;
     }
 
     .dc {
-      background: #A8820A;
+      background: #D4A832;
     }
 
-    /* CRITERIA TABLE */
-    table.cc {
+    input[type="text"] {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.84rem;
+      padding: 0.48rem 0.65rem;
+      border: 1px solid var(--border2);
+      border-radius: 3px;
+      background: var(--card);
+      color: var(--ink);
       width: 100%;
-      border-collapse: collapse;
-      min-width: 500px;
+      transition: border-color 0.15s;
     }
 
-    table.cc th {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.57rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--muted);
-      padding: 0.45rem 0.7rem;
+    input[type="text"]:focus {
+      outline: none;
+      border-color: var(--saffron);
+    }
+
+    .ev-row {
+      display: flex;
+      gap: 0.4rem;
+    }
+
+    .ev-row input {
+      flex: 1;
+    }
+
+    .role-pill {
+      font-size: 0.63rem;
+      padding: 0 0.65rem;
+      border: 1px solid var(--border2);
+      border-radius: 3px;
       background: var(--card);
-      border-bottom: 1px solid var(--border);
-      text-align: left;
+      color: var(--muted);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s;
     }
 
-    table.cc th.num {
-      text-align: center;
-    }
-
-    table.cc td {
-      padding: 0.52rem 0.7rem;
-      border-bottom: 1px solid var(--border);
-      font-size: 0.77rem;
-    }
-
-    table.cc td.num {
-      text-align: center;
-      font-family: 'DM Mono', monospace;
-      font-size: 0.7rem;
-    }
-
-    table.cc tr.cat-row {
-      background: rgba(200, 106, 24, 0.04);
-    }
-
-    table.cc tr.cat-row td {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.57rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
+    .role-pill.parent {
+      border-color: rgba(232, 135, 42, 0.4);
       color: var(--saffron);
-      padding: 0.32rem 0.7rem;
+      background: rgba(232, 135, 42, 0.08);
     }
 
-    table.cc tr:hover:not(.cat-row) {
-      background: var(--card);
+    .role-pill.advisor {
+      border-color: rgba(107, 158, 110, 0.4);
+      color: var(--sage);
+      background: rgba(107, 158, 110, 0.08);
     }
 
-    .crit-note {
-      font-size: 0.7rem;
-      color: var(--muted);
-      margin-bottom: 0.7rem;
-      font-style: italic;
+    .role-pill.student {
+      border-color: rgba(212, 168, 50, 0.4);
+      color: var(--gold);
+      background: rgba(212, 168, 50, 0.08);
     }
 
-    /* NOTES */
-    .notes-grid {
+    /* MINI RESULT */
+    .mini-result {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 0.8rem;
+      margin-bottom: 1.3rem;
     }
 
-    .note-col {
+    .mini-card {
+      background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 4px;
-      padding: 0.85rem;
+      border-radius: 6px;
+      padding: 1rem 1.2rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
     }
 
-    .note-col-title {
+    .mini-card.top {
+      border-color: var(--gold);
+    }
+
+    .mini-card.top::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--gold);
+    }
+
+    .mini-rank {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.56rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.25rem;
+    }
+
+    .mini-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.98rem;
+      color: var(--parchment);
+      margin-bottom: 0.4rem;
+      font-weight: 600;
+    }
+
+    .mini-score {
+      font-family: 'DM Mono', monospace;
+      font-size: 1.5rem;
+      color: var(--ink2);
+    }
+
+    .mini-card.top .mini-score {
+      color: var(--gold);
+    }
+
+    .mini-pct {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.58rem;
+      color: var(--muted);
+    }
+
+    .mini-bar-wrap {
+      margin-top: 0.6rem;
+      height: 3px;
+      background: var(--border);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .mini-bar-fill {
+      height: 100%;
+      border-radius: 2px;
+      transition: width 0.5s ease;
+    }
+
+    /* CRITERIA PANEL */
+    .criteria-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+      margin-bottom: 1.3rem;
+    }
+
+    .criteria-hdr {
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      padding: 0.9rem 1.3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+    }
+
+    .criteria-hdr-left h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem;
+      color: var(--parchment);
+    }
+
+    .criteria-hdr-left p {
+      font-size: 0.7rem;
+      color: var(--muted);
+      margin-top: 0.1rem;
+    }
+
+    .preset-row {
+      display: flex;
+      gap: 0.35rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .preset-lbl {
+      font-size: 0.63rem;
+      color: var(--muted);
+    }
+
+    .pbtn {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      padding: 0.22rem 0.55rem;
+      border: 1px solid var(--border2);
+      border-radius: 2px;
+      cursor: pointer;
+      background: transparent;
+      color: var(--muted);
+      transition: all 0.12s;
+    }
+
+    .pbtn:hover {
+      border-color: var(--saffron);
+      color: var(--saffron);
+    }
+
+    .pbtn.on {
+      background: var(--saffron);
+      border-color: var(--saffron);
+      color: white;
+    }
+
+    table.ct {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    table.ct thead tr {
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+    }
+
+    table.ct thead th {
+      padding: 0.55rem 0.9rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.57rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-align: left;
+    }
+
+    table.ct thead th.cth {
+      text-align: center;
+      min-width: 95px;
+    }
+
+    table.ct tbody tr.cat-hdr {
+      background: rgba(232, 135, 42, 0.04);
+      border-bottom: 1px solid var(--border);
+    }
+
+    table.ct tbody tr.cat-hdr td {
+      padding: 0.32rem 0.9rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.56rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--saffron);
+    }
+
+    table.ct tbody tr.crit-row {
+      border-bottom: 1px solid var(--border);
+      transition: background 0.1s;
+    }
+
+    table.ct tbody tr.crit-row:hover {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    table.ct td {
+      padding: 0.7rem 0.9rem;
+      vertical-align: middle;
+    }
+
+    table.ct tfoot tr {
+      background: var(--bg);
+      border-top: 2px solid var(--border);
+    }
+
+    table.ct tfoot td {
+      padding: 0.8rem 0.9rem;
+    }
+
+    .cn {
+      font-weight: 600;
+      font-size: 0.8rem;
+      color: var(--ink);
+    }
+
+    .cd {
+      font-size: 0.68rem;
+      color: var(--muted);
+      margin-top: 0.13rem;
+      line-height: 1.35;
+    }
+
+    .w-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    input.wnum {
+      width: 50px;
+      text-align: center;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.85rem;
+      color: var(--saffron);
+      padding: 0.28rem 0.35rem;
+      border: 1px solid var(--border2);
+      border-radius: 3px;
+      background: var(--bg);
+    }
+
+    input.wnum:focus {
+      outline: none;
+      border-color: var(--saffron);
+    }
+
+    .wpct {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      color: var(--muted);
+    }
+
+    .scell {
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    .stars {
+      display: flex;
+      gap: 2px;
+      justify-content: center;
+    }
+
+    .star {
+      font-size: 15px;
+      width: 19px;
+      height: 19px;
+      line-height: 19px;
+      text-align: center;
+      cursor: pointer;
+      color: var(--border2);
+      transition: color 0.1s, transform 0.1s;
+      user-select: none;
+    }
+
+    .star:hover {
+      transform: scale(1.25);
+    }
+
+    .sa {
+      color: #E8872A;
+    }
+
+    .sb {
+      color: #6B9E6E;
+    }
+
+    .sc {
+      color: #D4A832;
+    }
+
+    .sn {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.56rem;
+      color: var(--muted);
+      margin-top: 0.1rem;
+      text-align: center;
+    }
+
+    .rm-btn {
+      background: none;
+      border: none;
+      color: var(--border2);
+      cursor: pointer;
+      font-size: 0.72rem;
+      padding: 0.12rem 0.28rem;
+      border-radius: 2px;
+      transition: color 0.12s;
+    }
+
+    .rm-btn:hover {
+      color: var(--rust);
+    }
+
+    .add-row {
+      background: rgba(232, 135, 42, 0.03);
+      border-top: 1px dashed var(--border2);
+    }
+
+    .add-row td {
+      padding: 0.45rem 0.9rem;
+    }
+
+    .add-crit-form {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .add-crit-form input[type="text"] {
+      font-size: 0.75rem;
+      padding: 0.32rem 0.55rem;
+    }
+
+    .add-crit-form input[type="text"].c-name {
+      width: 145px;
+    }
+
+    .add-crit-form input[type="text"].c-desc {
+      flex: 1;
+      min-width: 160px;
+    }
+
+    .add-crit-form input[type="number"] {
+      width: 55px;
+      text-align: center;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--saffron);
+      padding: 0.32rem 0.35rem;
+      border: 1px solid var(--border2);
+      border-radius: 3px;
+      background: var(--bg);
+    }
+
+    .add-crit-form input[type="number"]:focus {
+      outline: none;
+      border-color: var(--saffron);
+    }
+
+    .cat-select {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.72rem;
+      padding: 0.32rem 0.55rem;
+      border: 1px solid var(--border2);
+      border-radius: 3px;
+      background: var(--card);
+      color: var(--ink);
+      cursor: pointer;
+    }
+
+    .cat-select:focus {
+      outline: none;
+      border-color: var(--saffron);
+    }
+
+    .wt-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      padding: 0.65rem 1.3rem;
+      background: var(--bg);
+      border-top: 1px solid var(--border);
+    }
+
+    .wt-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.63rem;
+      color: var(--muted);
+    }
+
+    .wt-track {
+      flex: 1;
+      height: 4px;
+      background: var(--border);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .wt-fill {
+      height: 100%;
+      border-radius: 2px;
+      background: var(--saffron);
+      transition: width 0.3s, background 0.3s;
+    }
+
+    .wt-num {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      min-width: 38px;
+    }
+
+    .wt-num.ok {
+      color: var(--sage);
+    }
+
+    .wt-num.over {
+      color: var(--rust);
+    }
+
+    .tot-label {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.95rem;
+      color: var(--parchment);
+    }
+
+    .tot-cell {
+      text-align: center;
+    }
+
+    .tot-num {
+      font-family: 'DM Mono', monospace;
+      font-size: 1.15rem;
+      display: block;
+      color: var(--ink2);
+    }
+
+    .tot-pct {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.58rem;
+      color: var(--muted);
+      display: block;
+    }
+
+    .tot-cell.winner .tot-num {
+      color: var(--gold);
+    }
+
+    /* NOTES */
+    .notes-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1.1rem 1.3rem;
+      margin-bottom: 1.3rem;
+    }
+
+    .notes-section h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.98rem;
+      color: var(--parchment);
+      margin-bottom: 0.8rem;
+    }
+
+    .notes-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.9rem;
+    }
+
+    .note-block label {
       font-size: 0.63rem;
       font-weight: 600;
       color: var(--muted);
       letter-spacing: 0.07em;
       text-transform: uppercase;
-      margin-bottom: 0.55rem;
       display: flex;
       align-items: center;
       gap: 0.32rem;
+      margin-bottom: 0.28rem;
     }
 
-    .note-entry {
-      margin-bottom: 0.55rem;
-      padding-bottom: 0.55rem;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .note-entry:last-child {
-      border: none;
-      margin: 0;
-      padding: 0;
-    }
-
-    .note-by {
-      font-size: 0.63rem;
-      color: var(--muted);
-      margin-bottom: 0.18rem;
-    }
-
-    .note-text {
-      font-size: 0.75rem;
-      color: var(--ink2);
+    textarea {
+      width: 100%;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.76rem;
+      padding: 0.5rem 0.65rem;
+      border: 1px solid var(--border2);
+      border-radius: 3px;
+      background: var(--card);
+      color: var(--ink);
+      resize: vertical;
+      min-height: 68px;
       line-height: 1.45;
     }
 
-    .note-empty {
-      font-size: 0.72rem;
-      color: var(--muted);
-      font-style: italic;
+    textarea:focus {
+      outline: none;
+      border-color: var(--saffron);
     }
 
-    /* EMPTY / LOADING */
-    .empty-state {
-      text-align: center;
-      padding: 3.5rem 1.5rem;
+    /* SUBMIT */
+    .submit-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1.3rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
     }
 
-    .empty-state h2 {
+    .submit-info h3 {
       font-family: 'Cormorant Garamond', serif;
-      font-size: 1.3rem;
-      color: var(--ink2);
-      margin-bottom: 0.5rem;
+      font-size: 1rem;
+      color: var(--parchment);
+      margin-bottom: 0.2rem;
     }
 
-    .empty-state p {
-      font-size: 0.8rem;
+    .submit-info p {
+      font-size: 0.74rem;
       color: var(--muted);
-      line-height: 1.6;
+      line-height: 1.5;
     }
 
-    .loading-spinner {
-      display: inline-block;
-      width: 18px;
-      height: 18px;
-      border: 2px solid var(--border);
-      border-top-color: var(--saffron);
-      border-radius: 50%;
-      animation: spin 0.7s linear infinite;
-      margin-right: 0.5rem;
-      vertical-align: middle;
+    .submit-btns {
+      display: flex;
+      gap: 0.7rem;
+      align-items: center;
+      flex-wrap: wrap;
     }
 
-    @keyframes spin {
-      to {
-        transform: rotate(360deg)
-      }
+    /* SUBMIT STATUS */
+    .submit-status {
+      display: none;
+      padding: 0.65rem 1.2rem;
+      border-radius: 4px;
+      font-size: 0.78rem;
+      margin-top: 0.8rem;
+      line-height: 1.5;
+    }
+
+    .submit-status.success {
+      background: rgba(107, 158, 110, 0.1);
+      border: 1px solid rgba(107, 158, 110, 0.3);
+      color: var(--sage);
+      display: block;
+    }
+
+    .submit-status.error {
+      background: rgba(192, 74, 46, 0.1);
+      border: 1px solid rgba(192, 74, 46, 0.3);
+      color: #E06050;
+      display: block;
+    }
+
+    .submit-status.loading {
+      background: rgba(232, 135, 42, 0.08);
+      border: 1px solid rgba(232, 135, 42, 0.2);
+      color: var(--saffron);
+      display: block;
     }
 
     @media(max-width:700px) {
-      .rp-body {
+      .setup-strip {
         grid-template-columns: 1fr;
       }
 
       .notes-grid {
         grid-template-columns: 1fr;
       }
+
+      .mini-result {
+        grid-template-columns: 1fr;
+      }
     }
 
     @media print {
 
-      .live-bar,
-      .rw-panel,
+      .submit-section,
       .header-nav,
+      .rm-btn,
+      .add-row,
       .btn {
         display: none !important;
       }
@@ -822,56 +886,123 @@
     <div class="logo">
       <div class="logo-mark">YS</div>
       <div class="logo-text">
-        <h1>YSTCA 2026 — Live Results</h1>
-        <p>Beneficiary Selection Aggregator</p>
+        <h1>YSTCA 2026 — My Scorecard</h1>
+        <p>Individual Evaluator · Beneficiary Selection</p>
       </div>
     </div>
     <div class="header-nav">
-      <a href="index.html" class="btn btn-light btn-sm">← Home</a>
-      <a href="scorecard.html" class="btn btn-light btn-sm">My Scorecard</a>
-      <button class="btn btn-light btn-sm" onclick="window.print()">Print</button>
+      <a href="index.html" class="btn btn-ghost btn-sm">← Home</a>
+      <a href="aggregator.html" class="btn btn-ghost btn-sm">View Results →</a>
     </div>
   </header>
 
-  <!-- LIVE BAR -->
-  <div class="live-bar">
-    <div class="live-indicator">
-      <div class="live-dot" id="liveDot"></div>
-      <span id="liveText">Loading…</span>
-    </div>
-    <div class="live-controls">
-      <button class="refresh-btn" onclick="loadScores()">↻ Refresh</button>
-      <span style="font-size:0.62rem;color:rgba(245,241,235,0.3)">Auto-refreshes every 30s</span>
-    </div>
-  </div>
-
   <div class="container">
 
-    <!-- ROLE WEIGHTS -->
-    <div class="rw-panel">
-      <div class="rw-title">Evaluator Role Weights</div>
-      <div class="rw-items">
-        <div class="rw-item"><label>Parent</label><input type="number" class="rw" id="rw-parent" value="1" min="0"
-            max="10" step="0.5" oninput="renderResults()"></div>
-        <div class="rw-item"><label>Advisor</label><input type="number" class="rw" id="rw-advisor" value="1.5" min="0"
-            max="10" step="0.5" oninput="renderResults()"></div>
-        <div class="rw-item"><label>Student</label><input type="number" class="rw" id="rw-student" value="0.75" min="0"
-            max="10" step="0.5" oninput="renderResults()"></div>
-      </div>
-      <div class="rw-note">Set all to 1 for simple equal average</div>
+    <div class="autosave-bar warn" id="autosaveBar">
+      <div class="autosave-dot"></div>
+      <span id="autosaveText">Scores auto-saved to this browser. Submit when done to share with the group.</span>
     </div>
 
-    <!-- EVALUATOR CARDS -->
-    <div class="label">Evaluators (<span id="evCount">0</span>)</div>
-    <div class="ev-grid" id="evGrid"></div>
-
-    <!-- RESULTS -->
-    <div id="resultsArea">
-      <div class="empty-state">
-        <h2>Waiting for scores…</h2>
-        <p>Results will appear automatically as evaluators submit their scorecards.</p>
+    <!-- SETUP -->
+    <div class="label">Step 1 — Your Details</div>
+    <div class="setup-strip">
+      <div class="field">
+        <label>Your Name & Role</label>
+        <div class="ev-row">
+          <input type="text" id="evName" placeholder="e.g. Priya Sharma" oninput="saveLocal();syncAll()">
+          <div class="role-pill parent" id="rolePill" onclick="cycleRole()">Parent</div>
+        </div>
+      </div>
+      <!-- Candidate names are locked — set in the CANDIDATES config above -->
+      <div class="field">
+        <label><span class="dot da"></span> Candidate A</label>
+        <div
+          style="padding:0.48rem 0.65rem;border:1px solid var(--border);border-radius:3px;background:var(--bg);color:var(--ink2);font-size:0.84rem;cursor:default"
+          id="dispA"></div>
+      </div>
+      <div class="field">
+        <label><span class="dot db"></span> Candidate B</label>
+        <div
+          style="padding:0.48rem 0.65rem;border:1px solid var(--border);border-radius:3px;background:var(--bg);color:var(--ink2);font-size:0.84rem;cursor:default"
+          id="dispB"></div>
+      </div>
+      <div class="field">
+        <label><span class="dot dc"></span> Candidate C</label>
+        <div
+          style="padding:0.48rem 0.65rem;border:1px solid var(--border);border-radius:3px;background:var(--bg);color:var(--ink2);font-size:0.84rem;cursor:default"
+          id="dispC"></div>
       </div>
     </div>
+
+    <!-- MINI RESULTS -->
+    <div class="label">Live Score Summary</div>
+    <div class="mini-result" id="miniResult"></div>
+
+    <!-- CRITERIA TABLE -->
+    <div class="criteria-panel">
+      <div class="criteria-hdr">
+        <div class="criteria-hdr-left">
+          <h2>Criteria & Scoring</h2>
+          <p>Add, remove, or reweight criteria. Weights must total 100%.</p>
+        </div>
+        <div class="preset-row">
+          <span class="preset-lbl">Preset:</span>
+          <button class="pbtn on" onclick="applyPreset('balanced',this)">Balanced</button>
+          <button class="pbtn" onclick="applyPreset('mission',this)">Mission</button>
+          <button class="pbtn" onclick="applyPreset('fundraising',this)">Fundraising</button>
+          <button class="pbtn" onclick="applyPreset('community',this)">Community</button>
+        </div>
+      </div>
+      <table class="ct" id="critTable">
+        <thead>
+          <tr>
+            <th style="width:33%">Criteria</th>
+            <th style="width:8%">Weight %</th>
+            <th class="cth"><span class="dot da" style="margin-right:3px"></span><span class="dn-a">Maitri</span></th>
+            <th class="cth"><span class="dot db" style="margin-right:3px"></span><span class="dn-b">PRAGNYA</span></th>
+            <th class="cth"><span class="dot dc" style="margin-right:3px"></span><span class="dn-c">Grail Family
+                Services</span></th>
+            <th style="width:28px"></th>
+          </tr>
+        </thead>
+        <tbody id="critBody"></tbody>
+        <tfoot id="critFoot"></tfoot>
+      </table>
+      <div class="wt-bar">
+        <span class="wt-label">Weight total:</span>
+        <div class="wt-track">
+          <div class="wt-fill" id="wtFill" style="width:100%"></div>
+        </div>
+        <span class="wt-num ok" id="wtNum">100%</span>
+      </div>
+    </div>
+
+    <!-- NOTES -->
+    <div class="notes-section">
+      <h2>Overall Notes & Rationale</h2>
+      <div class="notes-grid">
+        <div class="note-block"><label><span class="dot da"></span><span class="dn-a"></span></label><textarea
+            id="noteA" placeholder="Key observations…" oninput="saveLocal()"></textarea></div>
+        <div class="note-block"><label><span class="dot db"></span><span class="dn-b"></span></label><textarea
+            id="noteB" placeholder="Key observations…" oninput="saveLocal()"></textarea></div>
+        <div class="note-block"><label><span class="dot dc"></span><span class="dn-c"></span></label><textarea
+            id="noteC" placeholder="Key observations…" oninput="saveLocal()"></textarea></div>
+      </div>
+    </div>
+
+    <!-- SUBMIT -->
+    <div class="submit-section">
+      <div class="submit-info">
+        <h3>Submit to Group Results</h3>
+        <p>Your score will be saved to Google Sheets and appear in the live aggregator immediately.</p>
+      </div>
+      <div class="submit-btns">
+        <button class="btn btn-ghost" onclick="resetAll()">Reset</button>
+        <button class="btn btn-ghost" onclick="window.print()">Print / PDF</button>
+        <button class="btn btn-sage" onclick="submitScore()" id="submitBtn">Submit My Score →</button>
+      </div>
+    </div>
+    <div class="submit-status" id="submitStatus"></div>
 
   </div>
 
@@ -880,8 +1011,8 @@
     // !! CONFIGURATION — only one thing to set here !!
     const APPS_SCRIPT_URL = "https://script.google.com/macros/library/d/1j_TgZbTowEBM6yEctTLGRLCsHI883T52sKPO-N5jRcRfHdulcOC6xQRS/5";
 
-    // Candidate names are loaded from the Google Sheet Config tab automatically.
-    // These are fallbacks only — used if the sheet is unreachable.
+    // Candidate names are loaded from the Google Sheet Config tab at startup.
+    // These are fallbacks only — used if the sheet is unreachable on load.
     const CANDIDATES = {
       A: "Maitri",
       B: "PRAGNYA",
@@ -889,301 +1020,357 @@
     };
     // ══════════════════════════════════════════════════════════════════════════════
 
-    const COLORS = { A: '#C86A18', B: '#3A7040', C: '#A8820A' };
-    let allScores = [];
-    let lastCount = 0;
-    let pollTimer = null;
-    let consecutiveErrors = 0;
+    const CATS = ['Mission Alignment', 'Org Quality', 'Fundraising', 'Partnership'];
+    const DEFAULT_CRITERIA = [
+      { id: 'c1', cat: 'Mission Alignment', name: 'Cause-Community Fit', desc: 'Resonates with YSTCA\'s South Asian Bay Area donor & performer base?', w: 12 },
+      { id: 'c2', cat: 'Mission Alignment', name: 'Category Rotation', desc: 'Fresh cause not recently covered? (2025=Cultural Arts, 2024=Clothing)', w: 8 },
+      { id: 'c3', cat: 'Mission Alignment', name: 'Youth Relatability', desc: 'Can the team personally connect to and articulate this cause?', w: 8 },
+      { id: 'c4', cat: 'Org Quality', name: 'Local Bay Area Footprint', desc: 'Rooted in SF Bay Area (Santa Clara / Alameda / Contra Costa)?', w: 10 },
+      { id: 'c5', cat: 'Org Quality', name: 'Size & Impact Ratio', desc: 'Small enough that $20K–$35K creates a visible, meaningful difference?', w: 10 },
+      { id: 'c6', cat: 'Org Quality', name: 'Financial Transparency', desc: 'Public 990 filings, Charity Navigator rating, or clear financials?', w: 6 },
+      { id: 'c7', cat: 'Org Quality', name: 'Track Record', desc: 'Established 3+ years with demonstrated programs and outcomes?', w: 6 },
+      { id: 'c8', cat: 'Fundraising', name: 'Donor Story Power', desc: 'Compelling, emotional narratives that move donors to give?', w: 10 },
+      { id: 'c9', cat: 'Fundraising', name: 'Sponsorship Appeal', desc: 'Corporate sponsors find this cause brand-safe and attractive?', w: 8 },
+      { id: 'c10', cat: 'Fundraising', name: 'Company Match Eligibility', desc: 'Registered on Benevity/Causecast employer matching platforms?', w: 6 },
+      { id: 'c11', cat: 'Partnership', name: 'Org Responsiveness', desc: 'Responded positively / shown interest in partnering with YSTCA?', w: 8 },
+      { id: 'c12', cat: 'Partnership', name: 'Prior YSTCA Relationship', desc: 'Existing connection (past beneficiary, volunteer, personal link)?', w: 4 },
+      { id: 'c13', cat: 'Partnership', name: 'Co-Promotion Capacity', desc: 'Can org actively promote the event to their own audience?', w: 4 },
+    ];
+    const PRESETS = {
+      balanced: { c1: 12, c2: 8, c3: 8, c4: 10, c5: 10, c6: 6, c7: 6, c8: 10, c9: 8, c10: 6, c11: 8, c12: 4, c13: 4 },
+      mission: { c1: 18, c2: 12, c3: 12, c4: 12, c5: 10, c6: 4, c7: 4, c8: 8, c9: 6, c10: 4, c11: 6, c12: 2, c13: 2 },
+      fundraising: { c1: 8, c2: 4, c3: 6, c4: 6, c5: 8, c6: 6, c7: 4, c8: 16, c9: 14, c10: 10, c11: 10, c12: 4, c13: 4 },
+      community: { c1: 16, c2: 6, c3: 10, c4: 14, c5: 12, c6: 4, c7: 4, c8: 10, c9: 6, c10: 4, c11: 8, c12: 2, c13: 4 },
+    };
+    const COLORS = { A: '#E8872A', B: '#6B9E6E', C: '#D4A832' };
 
+    let criteria = JSON.parse(JSON.stringify(DEFAULT_CRITERIA));
+    let scores = {};
+    criteria.forEach(c => scores[c.id] = { A: 0, B: 0, C: 0 });
+    let critCounter = 20;
+    let evRole = 'parent';
+    const ROLES = ['parent', 'advisor', 'student'];
+
+    const gv = id => document.getElementById(id)?.value || '';
+    // Candidate names come from the locked CANDIDATES config — not editable by evaluators
+    const nA = () => CANDIDATES.A;
+    const nB = () => CANDIDATES.B;
+    const nC = () => CANDIDATES.C;
+    const gw = cid => { const el = document.getElementById('w-' + cid); return el ? (parseFloat(el.value) || 0) : 0; };
+    const totalW = () => criteria.reduce((s, c) => s + gw(c.id), 0);
     // Escape user-supplied strings before injecting into innerHTML
-    const esc = s => String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
-    // getRW: returns the role weight multiplier. Safely handles undefined/blank/unknown roles.
-    function getRW(role) {
-      const safeRole = String(role || '').toLowerCase().trim();
-      const el = document.getElementById('rw-' + safeRole);
-      const val = el ? parseFloat(el.value) : NaN;
-      return isNaN(val) ? 1 : val;  // default to 1× for any unrecognised role
+    // ── LOCAL STORAGE ─────────────────────────────────────────────────────────────
+    // Key is namespaced per evaluator name so two people sharing a browser don't
+    // overwrite each other's scores.
+    function localKey() {
+      const name = gv('evName').trim().toLowerCase().replace(/\s+/g, '_') || 'anonymous';
+      return 'ystca_scorecard_' + name;
+    }
+    function saveLocal() {
+      try {
+        localStorage.setItem(localKey(), JSON.stringify({
+          evName: gv('evName'), evRole,
+          // Candidate names are NOT saved — they always come from the CANDIDATES config
+          criteria: criteria.map(c => ({ ...c, w: gw(c.id) })),
+          scores, noteA: gv('noteA'), noteB: gv('noteB'), noteC: gv('noteC')
+        }));
+      } catch (e) { }
+    }
+    function loadLocal() {
+      try {
+        const saved = localStorage.getItem(localKey()) || localStorage.getItem('ystca_scorecard');
+        if (!saved) return;
+        const d = JSON.parse(saved);
+        if (d.evName) document.getElementById('evName').value = d.evName;
+        if (d.evRole) { evRole = d.evRole; const p = document.getElementById('rolePill'); p.textContent = evRole.charAt(0).toUpperCase() + evRole.slice(1); p.className = 'role-pill ' + evRole; }
+        // Candidate names intentionally NOT restored from storage — always use CANDIDATES config
+        if (d.criteria) criteria = d.criteria;
+        if (d.scores) scores = d.scores;
+        if (d.noteA) document.getElementById('noteA').value = d.noteA;
+        if (d.noteB) document.getElementById('noteB').value = d.noteB;
+        if (d.noteC) document.getElementById('noteC').value = d.noteC;
+      } catch (e) { }
     }
 
-    // ── Smart polling ──────────────────────────────────────────────────────────────
-    // Polls every 10s when scores are changing, backs off to 30s when stable,
-    // pauses to 60s after errors to avoid hammering a cold Apps Script instance.
-    function schedulePoll(delay) {
-      if (pollTimer) clearTimeout(pollTimer);
-      pollTimer = setTimeout(loadScores, delay);
+    // ── ROLE CYCLE ────────────────────────────────────────────────────────────────
+    function cycleRole() {
+      const i = ROLES.indexOf(evRole); evRole = ROLES[(i + 1) % ROLES.length];
+      const p = document.getElementById('rolePill'); p.textContent = evRole.charAt(0).toUpperCase() + evRole.slice(1); p.className = 'role-pill ' + evRole;
+      saveLocal();
     }
 
-    async function loadScores() {
-      const dot = document.getElementById('liveDot');
-      const txt = document.getElementById('liveText');
+    // ── RENDER ────────────────────────────────────────────────────────────────────
+    function renderTable() {
+      const tbody = document.getElementById('critBody'); tbody.innerHTML = '';
+      let lc = '';
+      criteria.forEach(c => {
+        if (c.cat !== lc) { lc = c.cat; const tr = document.createElement('tr'); tr.className = 'cat-hdr'; tr.innerHTML = `<td colspan="6">${c.cat}</td>`; tbody.appendChild(tr); }
+        const tr = document.createElement('tr'); tr.className = 'crit-row';
+        tr.innerHTML = `
+      <td><div class="cn">${esc(c.name)}</div><div class="cd">${esc(c.desc)}</div></td>
+      <td><div class="w-wrap"><input type="number" class="wnum" id="w-${c.id}" value="${c.w}" min="0" max="100" oninput="onWChange()"><span class="wpct">%</span></div></td>
+      <td class="scell" id="sc-${c.id}-A">${starsHtml(c.id, 'A')}</td>
+      <td class="scell" id="sc-${c.id}-B">${starsHtml(c.id, 'B')}</td>
+      <td class="scell" id="sc-${c.id}-C">${starsHtml(c.id, 'C')}</td>
+      <td><button class="rm-btn" onclick="rmCrit('${c.id}')">✕</button></td>`;
+        tbody.appendChild(tr);
+      });
+      const addTr = document.createElement('tr'); addTr.className = 'add-row';
+      addTr.innerHTML = `<td colspan="6"><div class="add-crit-form">
+    <select class="cat-select" id="newCat">${CATS.map(c => `<option>${c}</option>`).join('')}</select>
+    <input type="text" class="c-name" id="newName" placeholder="Criteria name">
+    <input type="text" class="c-desc" id="newDesc" placeholder="Short description (optional)">
+    <input type="number" id="newW" value="5" min="0" max="100">
+    <button class="btn btn-ghost btn-sm" onclick="addCrit()">+ Add</button>
+  </div></td>`;
+      tbody.appendChild(addTr);
+      renderFoot(); updateWBar(); updateMini();
+    }
+    function renderFoot() {
+      const tf = document.getElementById('critFoot');
+      const t = calcTotals(); const s = ['A', 'B', 'C'].sort((x, y) => t[y] - t[x]); const mw = totalW();
+      tf.innerHTML = `<tr><td><span class="tot-label">Weighted Total</span></td><td></td>${['A', 'B', 'C'].map(k => {
+        const p = mw > 0 ? (t[k] / mw * 100).toFixed(1) : '0.0';
+        return `<td class="tot-cell ${k === s[0] ? 'winner' : ''}"><span class="tot-num">${t[k].toFixed(1)}</span><span class="tot-pct">${p}%</span></td>`;
+      }).join('')}<td></td></tr>`;
+    }
+    function starsHtml(cid, cand) {
+      const cur = scores[cid]?.[cand] || 0; const cl = cand.toLowerCase();
+      let h = `<div class="stars">`;
+      for (let i = 1; i <= 5; i++)h += `<span class="star ${i <= cur ? 's' + cl : ''}" onclick="setStar('${cid}','${cand}',${i})">★</span>`;
+      return h + `</div><div class="sn">${cur}/5</div>`;
+    }
+    function setStar(cid, cand, val) {
+      if (!scores[cid]) scores[cid] = { A: 0, B: 0, C: 0 };
+      scores[cid][cand] = scores[cid][cand] === val ? 0 : val;
+      document.getElementById(`sc-${cid}-${cand}`).innerHTML = starsHtml(cid, cand);
+      renderFoot(); updateMini(); saveLocal();
+    }
+    function addCrit() {
+      const name = gv('newName').trim(); if (!name) { document.getElementById('newName').focus(); return; }
+      const cid = 'cx' + critCounter++;
+      criteria.push({ id: cid, cat: gv('newCat') || CATS[0], name, desc: gv('newDesc') || '', w: parseFloat(gv('newW')) || 5 });
+      scores[cid] = { A: 0, B: 0, C: 0 };
+      document.getElementById('newName').value = ''; document.getElementById('newDesc').value = '';
+      renderTable(); saveLocal();
+    }
+    function rmCrit(cid) { criteria = criteria.filter(c => c.id !== cid); delete scores[cid]; renderTable(); saveLocal(); }
+    function onWChange() { updateWBar(); renderFoot(); updateMini(); saveLocal(); document.querySelectorAll('.pbtn').forEach(b => b.classList.remove('on')); }
+    function updateWBar() {
+      const t = totalW(); const pct = Math.min(t, 100);
+      document.getElementById('wtFill').style.cssText = `width:${pct}%;background:${t === 100 ? 'var(--sage)' : t > 100 ? 'var(--rust)' : 'var(--saffron)'}`;
+      const el = document.getElementById('wtNum'); el.textContent = t + '%'; el.className = 'wt-num ' + (t === 100 ? 'ok' : t > 100 ? 'over' : '');
+    }
+    function applyPreset(name, btn) {
+      const p = PRESETS[name]; if (!p) return;
+      criteria.forEach(c => { if (p[c.id] !== undefined) { const el = document.getElementById('w-' + c.id); if (el) el.value = p[c.id]; c.w = p[c.id]; } });
+      document.querySelectorAll('.pbtn').forEach(b => b.classList.remove('on')); btn.classList.add('on');
+      updateWBar(); renderFoot(); updateMini(); saveLocal();
+    }
+    function calcTotals() {
+      let t = { A: 0, B: 0, C: 0 };
+      criteria.forEach(c => { const w = gw(c.id);['A', 'B', 'C'].forEach(k => { t[k] += (scores[c.id]?.[k] || 0) / 5 * w; }); });
+      return t;
+    }
+    function updateMini() {
+      const t = calcTotals(); const mw = totalW(); const s = ['A', 'B', 'C'].sort((x, y) => t[y] - t[x]);
+      const names = { A: nA(), B: nB(), C: nC() }; const ranks = { [s[0]]: '1st', [s[1]]: '2nd', [s[2]]: '3rd' };
+      document.getElementById('miniResult').innerHTML = ['A', 'B', 'C'].map(k => {
+        const pct = mw > 0 ? (t[k] / mw * 100) : 0; const isTop = k === s[0];
+        return `<div class="mini-card ${isTop ? 'top' : ''}"><div class="mini-rank">${ranks[k]} Place</div><div class="mini-name">${names[k]}</div><div class="mini-score">${t[k].toFixed(1)}</div><div class="mini-pct">${pct.toFixed(1)}% of max</div><div class="mini-bar-wrap"><div class="mini-bar-fill" style="width:${pct}%;background:${COLORS[k]}"></div></div></div>`;
+      }).join('');
+    }
+    function syncAll() {
+      // Populate the locked candidate display divs from config
+      const dispA = document.getElementById('dispA');
+      const dispB = document.getElementById('dispB');
+      const dispC = document.getElementById('dispC');
+      if (dispA) dispA.textContent = CANDIDATES.A;
+      if (dispB) dispB.textContent = CANDIDATES.B;
+      if (dispC) dispC.textContent = CANDIDATES.C;
+      // Update all inline name spans throughout the scoring table
+      document.querySelectorAll('.dn-a').forEach(e => e.textContent = nA());
+      document.querySelectorAll('.dn-b').forEach(e => e.textContent = nB());
+      document.querySelectorAll('.dn-c').forEach(e => e.textContent = nC());
+      updateMini();
+    }
+    function resetAll() {
+      if (!confirm('Reset all scores?')) return;
+      criteria = JSON.parse(JSON.stringify(DEFAULT_CRITERIA));
+      scores = {}; criteria.forEach(c => scores[c.id] = { A: 0, B: 0, C: 0 });
+      // Clear both the namespaced key and the legacy key
+      localStorage.removeItem(localKey());
+      localStorage.removeItem('ystca_scorecard');
+      renderTable();
+    }
 
-      if (APPS_SCRIPT_URL === 'YOUR_APPS_SCRIPT_URL_HERE') {
-        dot.className = 'live-dot offline';
-        txt.textContent = 'Not configured — set APPS_SCRIPT_URL in this file';
+    // ── SUBMIT TO SHEETS ──────────────────────────────────────────────────────────
+    function buildPayload() {
+      const t = calcTotals(); const mw = totalW();
+      return {
+        evaluator: { name: gv('evName') || 'Anonymous', role: evRole },
+        candidates: { A: nA(), B: nB(), C: nC() },
+        criteria: criteria.map(c => ({ id: c.id, cat: c.cat, name: c.name, weight: gw(c.id), scores: scores[c.id] || { A: 0, B: 0, C: 0 } })),
+        totals: {
+          A: { raw: +t.A.toFixed(2), pct: mw > 0 ? +(t.A / mw * 100).toFixed(2) : 0 },
+          B: { raw: +t.B.toFixed(2), pct: mw > 0 ? +(t.B / mw * 100).toFixed(2) : 0 },
+          C: { raw: +t.C.toFixed(2), pct: mw > 0 ? +(t.C / mw * 100).toFixed(2) : 0 },
+        },
+        notes: { A: gv('noteA'), B: gv('noteB'), C: gv('noteC') },
+        timestamp: new Date().toISOString(),
+        weightTotal: mw
+      };
+    }
+
+    async function submitScore() {
+      const statusEl = document.getElementById('submitStatus');
+      const submitBtn = document.getElementById('submitBtn');
+      const name = gv('evName').trim();
+
+      // ── Validation ────────────────────────────────────────────────────────────
+
+      // Fix 1: empty name
+      if (!name) {
+        statusEl.className = 'submit-status error';
+        statusEl.textContent = '⚠ Please enter your name before submitting.';
+        document.getElementById('evName').focus();
         return;
       }
 
-      // On first load, fetch config (candidate names) before rendering anything
-      // Fetch config (candidate names) on every poll cycle — POST bypasses Apps Script's
-      // GET cache so name changes in the Config sheet appear within one poll interval.
-      try {
-        const ctrl = new AbortController();
-        const tid = setTimeout(() => ctrl.abort(), 5000);
-        const res = await fetch(APPS_SCRIPT_URL, {
-          method: 'POST',
-          body: JSON.stringify({ action: 'get_config' }),
-          signal: ctrl.signal,
-        });
-        clearTimeout(tid);
-        const text = await res.text();
-        const data = JSON.parse(text);
-        if (data.ok && data.config) {
-          if (data.config.candidateA) CANDIDATES.A = data.config.candidateA;
-          if (data.config.candidateB) CANDIDATES.B = data.config.candidateB;
-          if (data.config.candidateC) CANDIDATES.C = data.config.candidateC;
-        }
-      } catch (e) {
-        // Silently keep existing CANDIDATES values
+      // Fix 3: float-safe weight check — Math.round handles 99.9999… === 100 edge case
+      const wTotal = Math.round(totalW());
+      if (wTotal !== 100) {
+        statusEl.className = 'submit-status error';
+        statusEl.textContent = `⚠ Weights total ${totalW().toFixed(1)}% — they must equal exactly 100% before submitting.`;
+        return;
       }
 
-      dot.className = 'live-dot';
-      dot.style.opacity = '0.4';
+      if (APPS_SCRIPT_URL === 'YOUR_APPS_SCRIPT_URL_HERE') {
+        statusEl.className = 'submit-status error';
+        statusEl.textContent = '⚠ Apps Script URL not configured. See SETUP.md.';
+        return;
+      }
+
+      // Fix 4: warn (don't block) if all scores are still zero
+      const totalStars = criteria.reduce((s, c) =>
+        s + ['A', 'B', 'C'].reduce((ss, k) => ss + (scores[c.id]?.[k] || 0), 0), 0);
+      if (totalStars === 0) {
+        if (!confirm("You haven't rated any candidates yet — all scores are zero.\n\nSubmit anyway?")) return;
+      }
+
+      // ── Loading state ─────────────────────────────────────────────────────────
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Submitting…';
+      statusEl.className = 'submit-status loading';
+      statusEl.textContent = '⏳ Sending to Google Sheets…';
+
+      let dots = 0;
+      const dotTimer = setInterval(() => {
+        dots = (dots + 1) % 4;
+        statusEl.textContent = '⏳ Sending to Google Sheets' + '.'.repeat(dots) + ' (can take 5–10s on first call)';
+      }, 600);
+
+      // Fix 5: 30-second fetch timeout via AbortController — prevents hanging forever on bad WiFi
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 30000);
 
       try {
-        const res = await fetch(APPS_SCRIPT_URL + '?action=get_scores&t=' + Date.now());
+        const payload = buildPayload();
+        const res = await fetch(APPS_SCRIPT_URL, {
+          method: 'POST',
+          body: JSON.stringify({ action: 'submit_score', payload }),
+          signal: controller.signal,
+        });
 
-        // Apps Script sometimes returns non-JSON on cold start — handle gracefully
+        clearTimeout(timeoutId);
+        clearInterval(dotTimer);
+
+        // Apps Script always returns 200 even on error — read as text first
         const text = await res.text();
         let data;
         try { data = JSON.parse(text); }
-        catch (e) { throw new Error('Apps Script returned unexpected response — it may still be waking up. Retrying…'); }
+        catch (e) { throw new Error('Unexpected response from Apps Script. Try again in a few seconds.'); }
 
         if (data.ok) {
-          consecutiveErrors = 0;
-          dot.style.opacity = '1';
-          const newScores = data.scores || [];
-          const newCount = newScores.length;
+          const action = data.debug && data.debug.action === 'updated' ? 'updated' : 'submitted';
+          statusEl.className = 'submit-status success';
+          statusEl.textContent = action === 'updated'
+            ? `✓ Score updated! Your previous submission for "${name}" was overwritten with your latest scores.`
+            : `✓ Score submitted! Your scores are now live in the aggregator.`;
 
-          // Detect changes: count changed, or any evaluator's scores changed
-          const changed = newCount !== allScores.length ||
-            JSON.stringify(newScores.map(s => s.timestamp)) !==
-            JSON.stringify(allScores.map(s => s.timestamp));
+          submitBtn.textContent = '✓ ' + (action === 'updated' ? 'Updated' : 'Submitted');
+          submitBtn.disabled = false;  // allow re-submit if they change their mind
 
-          allScores = newScores;
-          txt.textContent = `Live · ${newCount} score${newCount !== 1 ? 's' : ''} · Updated ${new Date().toLocaleTimeString()}`;
-          document.getElementById('evCount').textContent = newCount;
-
-          if (changed) {
-            renderEvGrid();
-            renderResults();
-            if (newCount > lastCount && lastCount > 0) {
-              document.title = '✦ New Score! — YSTCA Aggregator';
-              setTimeout(() => document.title = 'YSTCA 2026 — Live Results', 3000);
-            }
-            lastCount = newCount;
-            schedulePoll(10000);   // new data came in — check again in 10s
-          } else {
-            schedulePoll(30000);   // stable — slow down to 30s
-          }
+          document.getElementById('autosaveBar').className = 'autosave-bar';
+          document.getElementById('autosaveText').textContent =
+            `Score saved to Google Sheets as "${name}" · ${new Date().toLocaleTimeString()}`;
 
         } else {
-          throw new Error(data.message || 'Unknown error');
+          throw new Error(data.message || 'Unknown error from Apps Script');
         }
 
       } catch (err) {
-        consecutiveErrors++;
-        dot.className = 'live-dot offline';
-        dot.style.opacity = '1';
-        const retryIn = consecutiveErrors > 2 ? 60 : 15;
-        txt.textContent = `⚠ ${err.message} — retrying in ${retryIn}s`;
-        schedulePoll(retryIn * 1000);
+        clearTimeout(timeoutId);
+        clearInterval(dotTimer);
+
+        const isTimeout = err.name === 'AbortError';
+        statusEl.className = 'submit-status error';
+        statusEl.textContent = isTimeout
+          ? '⚠ Request timed out after 30 seconds. Check your internet connection and try again.'
+          : `⚠ Submission failed: ${err.message}`;
+        submitBtn.textContent = 'Retry →';
+        submitBtn.disabled = false;
       }
     }
 
-    function renderEvGrid() {
-      const grid = document.getElementById('evGrid');
-      if (!allScores.length) { grid.innerHTML = '<div style="color:var(--muted);font-size:0.8rem;grid-column:1/-1">No scores submitted yet.</div>'; return; }
-      const CDOT = { A: 'da', B: 'db', C: 'dc' };
-      grid.innerHTML = allScores.map(ev => {
-        const t = ev.totals || {}; const cands = ev.candidates || {};
-        // Fix: safe pct access — malformed rows won't crash the whole grid
-        const safePct = k => ((t[k] && t[k].pct != null) ? t[k].pct : 0);
-        const sorted = ['A', 'B', 'C'].sort((x, y) => safePct(y) - safePct(x));
-        const winner = sorted[0];
-        return `<div class="ev-card">
-      <div class="ev-card-name">${esc(ev.evaluator?.name || 'Unknown')}</div>
-      <div class="ev-card-role">${esc(ev.evaluator?.role || '—')} · ${ev.criteria?.length || '?'} criteria</div>
-      <div class="ev-scores">${['A', 'B', 'C'].map(k => `<div class="ev-score-chip ${k === winner ? 'winner' : ''}"><span class="sc-lbl"><span class="dot ${CDOT[k]}" style="display:inline-block;width:6px;height:6px;border-radius:50%;vertical-align:middle;margin-right:2px;background:${COLORS[k]}"></span>${cands[k] || k}</span><span class="sc-val">${safePct(k).toFixed(0)}%</span></div>`).join('')}</div>
-      <div class="ev-winner-note">Pick: <strong>${cands[winner] || winner}</strong></div>
-    </div>`;
-      }).join('');
-    }
-
-    function renderResults() {
-      const area = document.getElementById('resultsArea');
-      if (!allScores.length) {
-        area.innerHTML = `<div class="empty-state"><h2>Waiting for scores…</h2><p>Results will appear automatically as evaluators submit their scorecards.<br><a href="scorecard.html" style="color:var(--saffron)">Open Scorecard →</a></p></div>`;
-        return;
-      }
-
-      // Use locked CANDIDATES config as the authoritative name source.
-      // mostCommon() from submissions is kept as fallback only, in case config
-      // wasn't updated before deploy — but config always wins if set.
-      function mostCommon(arr) {
-        const freq = {}; arr.forEach(v => { const k = v || ''; freq[k] = (freq[k] || 0) + 1; });
-        return Object.entries(freq).sort((a, b) => b[1] - a[1])[0]?.[0] || '';
-      }
-      const submittedNames = {
-        A: mostCommon(allScores.map(s => s.candidates?.A || '')),
-        B: mostCommon(allScores.map(s => s.candidates?.B || '')),
-        C: mostCommon(allScores.map(s => s.candidates?.C || '')),
-      };
-      const names = {
-        A: (CANDIDATES.A && CANDIDATES.A !== 'Candidate A') ? CANDIDATES.A : (submittedNames.A || 'Candidate A'),
-        B: (CANDIDATES.B && CANDIDATES.B !== 'Candidate B') ? CANDIDATES.B : (submittedNames.B || 'Candidate B'),
-        C: (CANDIDATES.C && CANDIDATES.C !== 'Candidate C') ? CANDIDATES.C : (submittedNames.C || 'Candidate C'),
-      };
-
-      // Fix: safe pct accessor — won't crash on malformed rows
-      const safePct = (totals, k) => {
-        const v = totals?.[k]?.pct;
-        return (v != null && !isNaN(v)) ? Number(v) : 0;
-      };
-
-      // Weighted aggregate
-      let aggPct = { A: 0, B: 0, C: 0 }, totalRW = 0;
-      const evWinners = [];
-      allScores.forEach(ev => {
-        const rw = getRW(ev.evaluator?.role || 'parent'); totalRW += rw;
-        const t = ev.totals || {};
-        ['A', 'B', 'C'].forEach(k => aggPct[k] += safePct(t, k) * rw);
-        evWinners.push(['A', 'B', 'C'].sort((x, y) => safePct(t, y) - safePct(t, x))[0]);
-      });
-      if (totalRW > 0) ['A', 'B', 'C'].forEach(k => aggPct[k] /= totalRW);
-      const sorted = ['A', 'B', 'C'].sort((x, y) => aggPct[y] - aggPct[x]);
-      const winner = sorted[0], second = sorted[1];
-      const margin = (aggPct[winner] - aggPct[second]).toFixed(1);
-      const ranks = { [sorted[0]]: '1st', [sorted[1]]: '2nd', [sorted[2]]: '3rd' };
-
-      const wc = { A: 0, B: 0, C: 0 }; evWinners.forEach(w => wc[w]++);
-      const wv = wc[winner], tv = allScores.length;
-      const agreeStr = wv === tv ? 'Unanimous' : wv > tv / 2 ? 'Majority' : 'Split';
-      const ac = wv === tv ? 'ab-s' : wv > tv / 2 ? 'ab-m' : 'ab-x';
-
-      // Criteria union
-      const critMap = {};
-      allScores.forEach(ev => {
-        (ev.criteria || []).forEach(c => {
-          if (!critMap[c.name]) critMap[c.name] = { name: c.name, cat: c.cat || 'Other', entries: [] };
-          critMap[c.name].entries.push({ scores: c.scores || {}, weight: c.weight || 0, rw: getRW(ev.evaluator?.role) });
-        });
-      });
-      const catOrder = ['Mission Alignment', 'Org Quality', 'Fundraising', 'Partnership'];
-      const critRows = Object.values(critMap).map(cm => {
-        let ws = { A: 0, B: 0, C: 0 }, wt = 0;
-        cm.entries.forEach(e => { ['A', 'B', 'C'].forEach(k => ws[k] += (e.scores[k] || 0) * e.rw); wt += e.rw; });
-        const avg = { A: wt ? +(ws.A / wt).toFixed(2) : 0, B: wt ? +(ws.B / wt).toFixed(2) : 0, C: wt ? +(ws.C / wt).toFixed(2) : 0 };
-        return { name: cm.name, cat: cm.cat, avg, count: cm.entries.length };
-      }).sort((a, b) => {
-        const ci = x => catOrder.indexOf(x.cat) === -1 ? 99 : catOrder.indexOf(x.cat);
-        return ci(a) - ci(b) || a.name.localeCompare(b.name);
+    // ── INIT ──────────────────────────────────────────────────────────────────────
+    // Load config from Google Sheet first, then restore local state and render.
+    // If config fetch fails, fall back to the hardcoded CANDIDATES above.
+    async function init() {
+      // Show a brief loading state on the candidate display boxes
+      ['A', 'B', 'C'].forEach(k => {
+        const el = document.getElementById('disp' + k);
+        if (el) { el.textContent = '…'; el.style.opacity = '0.4'; }
       });
 
-      // Notes
-      const notesAgg = { A: [], B: [], C: [] };
-      allScores.forEach(ev => ['A', 'B', 'C'].forEach(k => { const n = ev.notes?.[k]; if (n && n.trim()) notesAgg[k].push({ by: ev.evaluator.name, text: n.trim() }); }));
-      const hasNotes = Object.values(notesAgg).some(a => a.length);
-
-      area.innerHTML = `
-  <!-- MAIN RESULTS -->
-  <div class="results-panel">
-    <div class="rp-header">
-      <h2>Aggregated Results · ${allScores.length} Evaluator${allScores.length > 1 ? 's' : ''}</h2>
-      <span class="rp-meta">Role-weighted · Live</span>
-    </div>
-    <div class="rp-body">
-      <div class="bars-side">
-        <div class="label" style="margin-bottom:0.75rem">Weighted Average Score</div>
-        ${['A', 'B', 'C'].map(k => `
-        <div class="abar-row">
-          <div class="abar-meta">
-            <div class="abar-name"><span class="dot d${k.toLowerCase()}" style="display:inline-block;width:9px;height:9px;border-radius:50%;background:${COLORS[k]}"></span>${names[k]}<span class="arank">${ranks[k]}</span>${k === winner ? `<span class="leader-tag">✓ Leader</span>` : ''}</div>
-            <div class="abar-pct" style="color:${COLORS[k]}">${aggPct[k].toFixed(1)}%</div>
-          </div>
-          <div class="abar-track"><div class="abar-fill f${k.toLowerCase()}" style="width:${aggPct[k]}%"></div></div>
-        </div>`).join('')}
-        <div class="votes-row">Individual picks: ${['A', 'B', 'C'].map(k => wc[k] > 0 ? `<strong>${names[k]}</strong> ${wc[k]}×` : null).filter(Boolean).join(' · ')}</div>
-      </div>
-      <div class="verdict-side">
-        <div class="v-lbl">Recommendation</div>
-        <div class="v-name">${names[winner]}</div>
-        <div class="v-score">${aggPct[winner].toFixed(1)}%</div>
-        <div class="v-sub">avg. across ${allScores.length} evaluator${allScores.length > 1 ? 's' : ''}</div>
-        <div class="v-margin">Leads ${names[second]} by ${margin} pts.<br>${parseFloat(margin) < 5 ? 'Close race — discussion recommended.' : 'Clear data-driven frontrunner.'}<br><br>Agreement: <span class="agree-badge ${ac}">${agreeStr} (${wv}/${tv})</span></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- PER-EVALUATOR -->
-  <div class="section-panel">
-    <div class="sp-header"><h2>Score by Evaluator</h2></div>
-    <div class="sp-body">
-      <table class="bk">
-        <thead><tr><th>Evaluator</th><th>Role</th><th>Wt</th><th class="num">${names.A}</th><th class="num">${names.B}</th><th class="num">${names.C}</th><th class="num">Their Pick</th></tr></thead>
-        <tbody>
-          ${allScores.map(ev => {
-        const t = ev.totals || {}; const es = ['A', 'B', 'C'].sort((x, y) => safePct(t, y) - safePct(t, x)); const ew = es[0]; const rw = getRW(ev.evaluator?.role || 'parent');
-        return `<tr><td><strong>${esc(ev.evaluator?.name || 'Unknown')}</strong></td><td style="font-size:0.7rem;color:var(--muted)">${esc(ev.evaluator?.role || '—')}</td><td class="num" style="color:var(--muted)">${rw}×</td>${['A', 'B', 'C'].map(k => `<td class="num" style="color:${k === ew ? COLORS[k] : 'inherit'};font-weight:${k === ew ? '600' : '400'}">${safePct(t, k).toFixed(1)}%</td>`).join('')}<td class="num">${esc(names[ew])}<span class="chip ch${ew.toLowerCase()}">#1</span></td></tr>`;
-      }).join('')}
-          <tr class="agg-row">
-            <td><strong>AGGREGATE</strong></td><td style="font-size:0.7rem;color:var(--muted)">weighted</td><td class="num" style="color:var(--muted)">—</td>
-            ${['A', 'B', 'C'].map(k => `<td class="num" style="color:${k === winner ? COLORS[k] : 'inherit'};font-weight:${k === winner ? '700' : '400'}">${aggPct[k].toFixed(1)}%</td>`).join('')}
-            <td class="num"><strong>${names[winner]}</strong><span class="chip ch${winner.toLowerCase()}">#1</span></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  <!-- CRITERIA -->
-  <div class="section-panel">
-    <div class="sp-header"><h2>Average Score by Criteria</h2></div>
-    <div class="sp-body">
-      <p class="crit-note">Averaged across all evaluators who included each criteria. Counts shown where evaluators used different sets.</p>
-      <table class="cc">
-        <thead><tr><th>Criteria</th><th>Evaluators</th><th class="num">${names.A}</th><th class="num">${names.B}</th><th class="num">${names.C}</th><th class="num">Leader</th></tr></thead>
-        <tbody>${(() => {
-          let rows = '', lc = '';
-          critRows.forEach(cr => {
-            if (cr.cat !== lc) { lc = cr.cat; rows += `<tr class="cat-row"><td colspan="6">${cr.cat}</td></tr>`; }
-            const ws = ['A', 'B', 'C'].sort((x, y) => cr.avg[y] - cr.avg[x])[0];
-            rows += `<tr><td>${cr.name}${cr.count < allScores.length ? `<span style="font-size:0.58rem;color:var(--muted);margin-left:0.25rem">(${cr.count}/${allScores.length})</span>` : ''}</td><td style="font-size:0.68rem;color:var(--muted)">${cr.count}</td>${['A', 'B', 'C'].map(k => `<td class="num" style="color:${k === ws ? COLORS[k] : 'inherit'};font-weight:${k === ws ? '600' : '400'}">${cr.avg[k].toFixed(1)}</td>`).join('')}<td class="num"><span class="dot d${ws.toLowerCase()}" style="display:inline-block;width:7px;height:7px;border-radius:50%;background:${COLORS[ws]};vertical-align:middle;margin-right:3px"></span>${names[ws]}</td></tr>`;
+      if (APPS_SCRIPT_URL !== 'YOUR_APPS_SCRIPT_URL_HERE') {
+        try {
+          // POST for get_config bypasses Apps Script's ~6-minute GET response cache.
+          // This means name changes in the Config sheet appear immediately on next page load.
+          const ctrl = new AbortController();
+          const tid = setTimeout(() => ctrl.abort(), 5000);
+          const res = await fetch(APPS_SCRIPT_URL, {
+            method: 'POST',
+            body: JSON.stringify({ action: 'get_config' }),
+            signal: ctrl.signal,
           });
-          return rows;
-        })()}</tbody>
-      </table>
-    </div>
-  </div>
+          clearTimeout(tid);
+          const text = await res.text();
+          const data = JSON.parse(text);
+          if (data.ok && data.config) {
+            if (data.config.candidateA) CANDIDATES.A = data.config.candidateA;
+            if (data.config.candidateB) CANDIDATES.B = data.config.candidateB;
+            if (data.config.candidateC) CANDIDATES.C = data.config.candidateC;
+          }
+        } catch (e) {
+          // Silently fall back to hardcoded CANDIDATES — page always renders
+        }
+      }
 
-  ${hasNotes ? `
-  <!-- NOTES -->
-  <div class="section-panel">
-    <div class="sp-header"><h2>Evaluator Notes</h2></div>
-    <div class="sp-body">
-      <div class="notes-grid">
-        ${['A', 'B', 'C'].map(k => `<div class="note-col">
-          <div class="note-col-title"><span class="dot d${k.toLowerCase()}" style="display:inline-block;width:7px;height:7px;border-radius:50%;background:${COLORS[k]}"></span>${names[k]}</div>
-          ${notesAgg[k].length ? notesAgg[k].map(n => `<div class="note-entry"><div class="note-by">${n.by}</div><div class="note-text">${n.text}</div></div>`).join('') : '<div class="note-empty">No notes.</div>'}
-        </div>`).join('')}
-      </div>
-    </div>
-  </div>`: ''}
-  `;
+      // Restore opacity on display boxes
+      ['A', 'B', 'C'].forEach(k => {
+        const el = document.getElementById('disp' + k);
+        if (el) el.style.opacity = '1';
+      });
+
+      loadLocal();
+      renderTable();
+      syncAll();
     }
 
-    // Start polling immediately
-    loadScores();
+    init();
   </script>
 </body>
 
