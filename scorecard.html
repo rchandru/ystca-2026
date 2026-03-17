@@ -598,10 +598,15 @@ async function init() {
 
   if (APPS_SCRIPT_URL !== 'YOUR_APPS_SCRIPT_URL_HERE') {
     try {
-      // 5-second timeout — config fetch must never block the page from rendering
+      // POST for get_config bypasses Apps Script's ~6-minute GET response cache.
+      // This means name changes in the Config sheet appear immediately on next page load.
       const ctrl = new AbortController();
       const tid  = setTimeout(() => ctrl.abort(), 5000);
-      const res  = await fetch(APPS_SCRIPT_URL + '?action=get_config&t=' + Date.now(), { signal: ctrl.signal });
+      const res  = await fetch(APPS_SCRIPT_URL, {
+        method: 'POST',
+        body: JSON.stringify({ action: 'get_config' }),
+        signal: ctrl.signal,
+      });
       clearTimeout(tid);
       const text = await res.text();
       const data = JSON.parse(text);

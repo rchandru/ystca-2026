@@ -221,7 +221,6 @@ let allScores=[];
 let lastCount=0;
 let pollTimer=null;
 let consecutiveErrors=0;
-let configLoaded=false;
 
 // Escape user-supplied strings before injecting into innerHTML
 const esc=s=>String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
@@ -253,24 +252,26 @@ async function loadScores(){
   }
 
   // On first load, fetch config (candidate names) before rendering anything
-  if(!configLoaded){
-    try {
-      // 5-second timeout so a slow config fetch never delays the first results render
-      const ctrl = new AbortController();
-      const tid  = setTimeout(() => ctrl.abort(), 5000);
-      const res  = await fetch(APPS_SCRIPT_URL+'?action=get_config&t='+Date.now(), { signal: ctrl.signal });
-      clearTimeout(tid);
-      const text = await res.text();
-      const data = JSON.parse(text);
-      if(data.ok && data.config){
-        if(data.config.candidateA) CANDIDATES.A = data.config.candidateA;
-        if(data.config.candidateB) CANDIDATES.B = data.config.candidateB;
-        if(data.config.candidateC) CANDIDATES.C = data.config.candidateC;
-      }
-    } catch(e){
-      // Silently fall back to hardcoded CANDIDATES
+  // Fetch config (candidate names) on every poll cycle — POST bypasses Apps Script's
+  // GET cache so name changes in the Config sheet appear within one poll interval.
+  try {
+    const ctrl = new AbortController();
+    const tid  = setTimeout(() => ctrl.abort(), 5000);
+    const res  = await fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      body: JSON.stringify({ action: 'get_config' }),
+      signal: ctrl.signal,
+    });
+    clearTimeout(tid);
+    const text = await res.text();
+    const data = JSON.parse(text);
+    if(data.ok && data.config){
+      if(data.config.candidateA) CANDIDATES.A = data.config.candidateA;
+      if(data.config.candidateB) CANDIDATES.B = data.config.candidateB;
+      if(data.config.candidateC) CANDIDATES.C = data.config.candidateC;
     }
-    configLoaded = true;
+  } catch(e){
+    // Silently keep existing CANDIDATES values
   }
 
   dot.className='live-dot';
