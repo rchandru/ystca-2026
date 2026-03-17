@@ -1188,23 +1188,37 @@
     async function submitScore() {
       const statusEl = document.getElementById('submitStatus');
       const submitBtn = document.getElementById('submitBtn');
+      const name = gv('evName').trim();
 
-      if (!gv('evName').trim()) {
+      // ── Validation ────────────────────────────────────────────────────────────
+      if (!name) {
         statusEl.className = 'submit-status error';
-        statusEl.textContent = '⚠ Please enter your name before submitting.'; return;
+        statusEl.textContent = '⚠ Please enter your name before submitting.';
+        return;
       }
       if (totalW() !== 100) {
         statusEl.className = 'submit-status error';
-        statusEl.textContent = `⚠ Weights total ${totalW()}% — they must equal 100% before submitting.`; return;
+        statusEl.textContent = `⚠ Weights total ${totalW()}% — they must equal exactly 100% before submitting.`;
+        return;
       }
       if (APPS_SCRIPT_URL === 'YOUR_APPS_SCRIPT_URL_HERE') {
         statusEl.className = 'submit-status error';
-        statusEl.textContent = '⚠ Apps Script URL not configured. See SETUP.md.'; return;
+        statusEl.textContent = '⚠ Apps Script URL not configured. See SETUP.md.';
+        return;
       }
 
-      statusEl.className = 'submit-status loading';
-      statusEl.textContent = '⏳ Submitting your scores…';
+      // ── Loading state with animated dots ─────────────────────────────────────
       submitBtn.disabled = true;
+      submitBtn.textContent = 'Submitting…';
+      statusEl.className = 'submit-status loading';
+      statusEl.textContent = '⏳ Sending to Google Sheets… (this can take 5–10 seconds on first submit)';
+
+      // Animated progress dots so it doesn't feel frozen
+      let dots = 0;
+      const dotTimer = setInterval(() => {
+        dots = (dots + 1) % 4;
+        statusEl.textContent = '⏳ Sending to Google Sheets' + '.'.repeat(dots) + ' (Apps Script can take 5–10s on first call)';
+      }, 600);
 
       try {
         const payload = buildPayload();
@@ -1212,17 +1226,35 @@
           method: 'POST',
           body: JSON.stringify({ action: 'submit_score', payload }),
         });
+
+        clearInterval(dotTimer);
+
+        // Apps Script always returns 200 even on error — read the JSON
         const data = await res.json();
+
         if (data.ok) {
+          const action = data.debug && data.debug.action === 'updated' ? 'updated' : 'submitted';
           statusEl.className = 'submit-status success';
-          statusEl.textContent = `✓ Score submitted successfully! Your scores are now live in the aggregator. Evaluator: ${payload.evaluator.name}`;
-          submitBtn.textContent = '✓ Submitted';
+          statusEl.textContent = action === 'updated'
+            ? `✓ Score updated! Your previous submission for "${name}" was overwritten with your new scores.`
+            : `✓ Score submitted! Your scores are now live in the aggregator.`;
+
+          submitBtn.textContent = '✓ ' + (action === 'updated' ? 'Updated' : 'Submitted');
+          submitBtn.disabled = false;  // allow re-submit if they change their mind again
+
           document.getElementById('autosaveBar').className = 'autosave-bar';
-          document.getElementById('autosaveText').textContent = 'Score submitted to Google Sheets ✓';
-        } else throw new Error(data.message);
+          document.getElementById('autosaveText').textContent =
+            `Score saved to Google Sheets as "${name}" · ${new Date().toLocaleTimeString()}`;
+
+        } else {
+          throw new Error(data.message || 'Unknown error from Apps Script');
+        }
+
       } catch (err) {
+        clearInterval(dotTimer);
         statusEl.className = 'submit-status error';
-        statusEl.textContent = `⚠ Submission failed: ${err.message}. Check your Apps Script URL or try again.`;
+        statusEl.textContent = `⚠ Submission failed: ${err.message}`;
+        submitBtn.textContent = 'Retry →';
         submitBtn.disabled = false;
       }
     }

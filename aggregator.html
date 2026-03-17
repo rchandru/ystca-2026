@@ -884,8 +884,18 @@
     const COLORS = { A: '#C86A18', B: '#3A7040', C: '#A8820A' };
     let allScores = [];
     let lastCount = 0;
+    let pollTimer = null;
+    let consecutiveErrors = 0;
 
     function getRW(role) { const el = document.getElementById('rw-' + role); return el ? (parseFloat(el.value) || 1) : 1; }
+
+    // ── Smart polling ──────────────────────────────────────────────────────────────
+    // Polls every 10s when scores are changing, backs off to 30s when stable,
+    // pauses to 60s after errors to avoid hammering a cold Apps Script instance.
+    function schedulePoll(delay) {
+      if (pollTimer) clearTimeout(pollTimer);
+      pollTimer = setTimeout(loadScores, delay);
+    }
 
     async function loadScores() {
       const dot = document.getElementById('liveDot');
@@ -897,26 +907,58 @@
         return;
       }
 
+      // Show a subtle "checking" state without clearing existing results
+      dot.className = 'live-dot';
+      dot.style.opacity = '0.4';
+
       try {
         const res = await fetch(APPS_SCRIPT_URL + '?action=get_scores&t=' + Date.now());
-        const data = await res.json();
+
+        // Apps Script sometimes returns non-JSON on cold start — handle gracefully
+        const text = await res.text();
+        let data;
+        try { data = JSON.parse(text); }
+        catch (e) { throw new Error('Apps Script returned unexpected response — it may still be waking up. Retrying…'); }
+
         if (data.ok) {
-          allScores = data.scores || [];
-          dot.className = 'live-dot';
-          txt.textContent = `Live · ${allScores.length} score${allScores.length !== 1 ? 's' : ''} · Last updated ${new Date().toLocaleTimeString()}`;
-          document.getElementById('evCount').textContent = allScores.length;
-          renderEvGrid();
-          renderResults();
-          if (allScores.length > lastCount && lastCount > 0) {
-            // New submission came in — briefly flash
-            document.title = `✦ New Score! — YSTCA Aggregator`;
-            setTimeout(() => document.title = 'YSTCA 2026 — Live Results', 3000);
+          consecutiveErrors = 0;
+          dot.style.opacity = '1';
+          const newScores = data.scores || [];
+          const newCount = newScores.length;
+
+          // Detect changes: count changed, or any evaluator's scores changed
+          const changed = newCount !== allScores.length ||
+            JSON.stringify(newScores.map(s => s.timestamp)) !==
+            JSON.stringify(allScores.map(s => s.timestamp));
+
+          allScores = newScores;
+          txt.textContent = `Live · ${newCount} score${newCount !== 1 ? 's' : ''} · Updated ${new Date().toLocaleTimeString()}`;
+          document.getElementById('evCount').textContent = newCount;
+
+          if (changed) {
+            renderEvGrid();
+            renderResults();
+            if (newCount > lastCount && lastCount > 0) {
+              document.title = '✦ New Score! — YSTCA Aggregator';
+              setTimeout(() => document.title = 'YSTCA 2026 — Live Results', 3000);
+            }
+            lastCount = newCount;
+            schedulePoll(10000);   // new data came in — check again in 10s
+          } else {
+            schedulePoll(30000);   // stable — slow down to 30s
           }
-          lastCount = allScores.length;
-        } else throw new Error(data.message);
+
+        } else {
+          throw new Error(data.message || 'Unknown error');
+        }
+
       } catch (err) {
+        consecutiveErrors++;
         dot.className = 'live-dot offline';
-        txt.textContent = `Connection error · ${err.message}`;
+        dot.style.opacity = '1';
+        const retryIn = consecutiveErrors > 2 ? 60 : 15;
+        txt.textContent = `⚠ ${err.message} — retrying in ${retryIn}s`;
+        schedulePoll(retryIn * 1000);
       }
     }
 
@@ -1078,9 +1120,8 @@
   `;
     }
 
-    // Auto-refresh every 30 seconds
+    // Start polling immediately
     loadScores();
-    setInterval(loadScores, 30000);
   </script>
 </body>
 
