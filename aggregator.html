@@ -1249,7 +1249,11 @@
       // mostCommon() from submissions is kept as fallback only, in case config
       // wasn't updated before deploy — but config always wins if set.
       function mostCommon(arr) {
-        const freq = {}; arr.forEach(v => { const k = v || ''; freq[k] = (freq[k] || 0) + 1; });
+        // Filter out null/undefined/empty before counting so they don't skew the result
+        const freq = {};
+        arr.filter(v => v && String(v).trim()).forEach(v => {
+          const k = String(v).trim(); freq[k] = (freq[k] || 0) + 1;
+        });
         return Object.entries(freq).sort((a, b) => b[1] - a[1])[0]?.[0] || '';
       }
       const submittedNames = {
