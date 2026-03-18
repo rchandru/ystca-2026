@@ -813,6 +813,186 @@
         display: none !important;
       }
     }
+
+    /* ── LOCKED SCREEN ── */
+    .locked-screen {
+      text-align: center;
+      padding: 4rem 1.5rem 5rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 1.3rem;
+    }
+
+    .lock-icon {
+      font-size: 3.5rem;
+      margin-bottom: 1.2rem;
+      line-height: 1;
+    }
+
+    .lock-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.8rem;
+      color: var(--ink);
+      margin-bottom: 0.6rem;
+    }
+
+    .lock-sub {
+      font-size: 0.85rem;
+      color: var(--muted);
+      max-width: 420px;
+      margin: 0 auto 1.2rem;
+      line-height: 1.6;
+    }
+
+    .lock-count {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--saffron);
+      margin-bottom: 2rem;
+      background: rgba(200, 106, 24, 0.08);
+      border: 1px solid rgba(200, 106, 24, 0.2);
+      display: inline-block;
+      padding: 0.3rem 1rem;
+      border-radius: 3px;
+    }
+
+    .lock-form {
+      display: flex;
+      gap: 0.6rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 0.8rem;
+    }
+
+    .lock-pw {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.88rem;
+      padding: 0.6rem 1rem;
+      border: 1.5px solid var(--border2);
+      border-radius: 4px;
+      background: var(--card);
+      color: var(--ink);
+      width: 240px;
+      transition: border-color 0.15s;
+    }
+
+    .lock-pw:focus {
+      outline: none;
+      border-color: var(--saffron);
+    }
+
+    .lock-btn {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 0.6rem 1.4rem;
+      background: var(--saffron);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .lock-btn:hover {
+      background: #A05510;
+    }
+
+    .lock-error {
+      font-size: 0.78rem;
+      color: var(--rust);
+      min-height: 1.2rem;
+      transition: opacity 0.2s;
+    }
+
+    /* ── COUNTDOWN ── */
+    .countdown-screen {
+      text-align: center;
+      padding: 5rem 1.5rem;
+      background: var(--ink);
+      border-radius: 8px;
+      margin-bottom: 1.3rem;
+    }
+
+    .countdown-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 8rem;
+      font-weight: 700;
+      color: var(--saffron);
+      line-height: 1;
+      display: block;
+      transition: transform 0.15s, opacity 0.15s;
+    }
+
+    .countdown-num.pop {
+      animation: countpop 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .countdown-num.reveal-flash {
+      animation: flash 0.6s ease;
+    }
+
+    .countdown-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      color: rgba(245, 241, 235, 0.4);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-top: 1.2rem;
+    }
+
+    @keyframes countpop {
+      0% {
+        transform: scale(0.3);
+        opacity: 0;
+      }
+
+      60% {
+        transform: scale(1.15);
+        opacity: 1;
+      }
+
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    @keyframes flash {
+      0% {
+        transform: scale(0.5);
+        opacity: 0;
+      }
+
+      50% {
+        transform: scale(1.3);
+        opacity: 1;
+      }
+
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    @keyframes shake {
+
+      0%,
+      100% {
+        transform: translateX(0);
+      }
+
+      20%,
+      60% {
+        transform: translateX(-6px);
+      }
+
+      40%,
+      80% {
+        transform: translateX(6px);
+      }
+    }
   </style>
 </head>
 
@@ -894,6 +1074,8 @@
     let lastCount = 0;
     let pollTimer = null;
     let consecutiveErrors = 0;
+    let resultsUnlocked = false;  // stays false until correct password entered
+    let resultsPassword = '';     // loaded from Config sheet — empty = always unlocked
 
     // Escape user-supplied strings before injecting into innerHTML
     const esc = s => String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -924,9 +1106,8 @@
         return;
       }
 
-      // On first load, fetch config (candidate names) before rendering anything
-      // Fetch config (candidate names) on every poll cycle — POST bypasses Apps Script's
-      // GET cache so name changes in the Config sheet appear within one poll interval.
+      // Fetch config on every poll cycle — POST bypasses Apps Script's GET cache
+      // so name/password changes in the Config sheet appear within one poll interval.
       try {
         const ctrl = new AbortController();
         const tid = setTimeout(() => ctrl.abort(), 5000);
@@ -942,9 +1123,13 @@
           if (data.config.candidateA) CANDIDATES.A = data.config.candidateA;
           if (data.config.candidateB) CANDIDATES.B = data.config.candidateB;
           if (data.config.candidateC) CANDIDATES.C = data.config.candidateC;
+          // resultsPassword: empty string = always unlocked, any value = locked until entered
+          resultsPassword = data.config.resultsPassword || '';
+          // If password was removed from sheet mid-session, auto-unlock
+          if (!resultsPassword) resultsUnlocked = true;
         }
       } catch (e) {
-        // Silently keep existing CANDIDATES values
+        // Silently keep existing values
       }
 
       dot.className = 'live-dot';
@@ -1022,6 +1207,26 @@
 
     function renderResults() {
       const area = document.getElementById('resultsArea');
+      // ── LOCK CHECK ────────────────────────────────────────────────────────────
+      // If a password is set and not yet entered, show the locked screen instead
+      if (resultsPassword && !resultsUnlocked) {
+        area.innerHTML = `
+      <div class="locked-screen" id="lockedScreen">
+        <div class="lock-icon">🔒</div>
+        <h2 class="lock-title">Results are locked</h2>
+        <p class="lock-sub">Voting is in progress. The facilitator will unlock results when everyone has submitted.</p>
+        <div class="lock-count" id="lockCount">${allScores.length} score${allScores.length !== 1 ? 's' : ''} submitted so far</div>
+        <div class="lock-form">
+          <input type="password" id="pwInput" class="lock-pw" placeholder="Enter unlock password…"
+            onkeydown="if(event.key==='Enter')tryUnlock()">
+          <button class="lock-btn" onclick="tryUnlock()">Unlock Results →</button>
+        </div>
+        <div class="lock-error" id="lockError"></div>
+      </div>`;
+        document.getElementById('pwInput').focus();
+        return;
+      }
+
       if (!allScores.length) {
         area.innerHTML = `<div class="empty-state"><h2>Waiting for scores…</h2><p>Results will appear automatically as evaluators submit their scorecards.<br><a href="scorecard.html" style="color:var(--saffron)">Open Scorecard →</a></p></div>`;
         return;
@@ -1180,6 +1385,67 @@
     </div>
   </div>`: ''}
   `;
+    }
+
+    // ── UNLOCK + COUNTDOWN REVEAL ─────────────────────────────────────────────────
+    function tryUnlock() {
+      const input = document.getElementById('pwInput');
+      const errEl = document.getElementById('lockError');
+      if (!input) return;
+
+      const entered = input.value.trim();
+      if (!entered) { showLockError('Please enter the password.'); return; }
+
+      if (entered === resultsPassword) {
+        // Correct — start countdown then reveal
+        resultsUnlocked = true;
+        startCountdown();
+      } else {
+        showLockError('Incorrect password. Try again.');
+        input.value = '';
+        input.focus();
+        // Shake animation
+        input.style.animation = 'shake 0.4s ease';
+        setTimeout(() => input.style.animation = '', 400);
+      }
+    }
+
+    function showLockError(msg) {
+      const el = document.getElementById('lockError');
+      if (el) { el.textContent = msg; el.style.opacity = '1'; }
+    }
+
+    function startCountdown() {
+      const area = document.getElementById('resultsArea');
+      const counts = [3, 2, 1];
+      let i = 0;
+
+      function showCount() {
+        if (i < counts.length) {
+          area.innerHTML = `
+        <div class="countdown-screen">
+          <div class="countdown-num" id="countNum">${counts[i]}</div>
+          <div class="countdown-label">Revealing results in…</div>
+        </div>`;
+          // Trigger animation
+          requestAnimationFrame(() => {
+            const el = document.getElementById('countNum');
+            if (el) el.classList.add('pop');
+          });
+          i++;
+          setTimeout(showCount, 900);
+        } else {
+          // Final "Reveal!" flash then render results
+          area.innerHTML = `
+        <div class="countdown-screen">
+          <div class="countdown-num reveal-flash" id="countNum">🎉</div>
+          <div class="countdown-label">Revealing results…</div>
+        </div>`;
+          setTimeout(() => renderResults(), 600);
+        }
+      }
+
+      showCount();
     }
 
     // Start polling immediately
