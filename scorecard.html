@@ -909,7 +909,7 @@
       <div class="field">
         <label>Your Name & Role</label>
         <div class="ev-row">
-          <input type="text" id="evName" placeholder="e.g. Priya Sharma" oninput="saveLocal();syncAll()">
+          <input type="text" id="evName" placeholder="e.g. Priya Sharma" oninput="onNameChange()">
           <div class="role-pill parent" id="rolePill" onclick="cycleRole()">Parent</div>
         </div>
       </div>
@@ -1080,17 +1080,47 @@
     }
     function loadLocal() {
       try {
-        const saved = localStorage.getItem(localKey()) || localStorage.getItem('ystca_scorecard');
+        // Scan all localStorage keys for any ystca_scorecard_ entry.
+        // This handles the case where the page refreshes with an empty name field —
+        // localKey() would return 'anonymous' and miss the real saved data.
+        let saved = null;
+        let bestKey = null;
+
+        for (let i = 0; i < localStorage.length; i++) {
+          const k = localStorage.key(i);
+          if (!k || !k.startsWith('ystca_scorecard_')) continue;
+          // Prefer any key over 'anonymous', and prefer later-saved over earlier
+          const candidate = localStorage.getItem(k);
+          if (!candidate) continue;
+          if (!bestKey || k !== 'ystca_scorecard_anonymous') {
+            bestKey = k;
+            saved = candidate;
+          }
+        }
+
+        // Also check the legacy key as a final fallback
+        if (!saved) saved = localStorage.getItem('ystca_scorecard');
         if (!saved) return;
+
         const d = JSON.parse(saved);
         if (d.evName) document.getElementById('evName').value = d.evName;
-        if (d.evRole) { evRole = d.evRole; const p = document.getElementById('rolePill'); p.textContent = evRole.charAt(0).toUpperCase() + evRole.slice(1); p.className = 'role-pill ' + evRole; }
+        if (d.evRole) {
+          evRole = d.evRole;
+          const p = document.getElementById('rolePill');
+          p.textContent = evRole.charAt(0).toUpperCase() + evRole.slice(1);
+          p.className = 'role-pill ' + evRole;
+        }
         // Candidate names intentionally NOT restored from storage — always use CANDIDATES config
         if (d.criteria) criteria = d.criteria;
         if (d.scores) scores = d.scores;
         if (d.noteA) document.getElementById('noteA').value = d.noteA;
         if (d.noteB) document.getElementById('noteB').value = d.noteB;
         if (d.noteC) document.getElementById('noteC').value = d.noteC;
+
+        // Re-save immediately under the correct named key.
+        // This migrates data from 'anonymous' (saved before name was typed)
+        // to 'ystca_scorecard_priya_sharma' so future saves go to the right place.
+        saveLocal();
       } catch (e) { }
     }
 
@@ -1099,6 +1129,15 @@
       const i = ROLES.indexOf(evRole); evRole = ROLES[(i + 1) % ROLES.length];
       const p = document.getElementById('rolePill'); p.textContent = evRole.charAt(0).toUpperCase() + evRole.slice(1); p.className = 'role-pill ' + evRole;
       saveLocal();
+    }
+
+    // ── NAME CHANGE ───────────────────────────────────────────────────────────────
+    // When the name field is edited, save under the new named key immediately.
+    // This ensures notes, scores, and criteria typed before the name was entered
+    // are migrated to the correct key and not lost on next refresh.
+    function onNameChange() {
+      saveLocal();   // saves under the new localKey() based on current name value
+      syncAll();
     }
 
     // ── RENDER ────────────────────────────────────────────────────────────────────
