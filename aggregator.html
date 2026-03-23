@@ -1,1230 +1,473 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>YSTCA 2026 — Live Results</title>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap"
-    rel="stylesheet">
-  <style>
-    :root {
-      --bg: #F5F1EB;
-      --surface: #FFFFFF;
-      --card: #FAF7F2;
-      --border: #DDD6C8;
-      --border2: #C8C0B0;
-      --saffron: #C86A18;
-      --gold: #A8820A;
-      --sage: #3A7040;
-      --rust: #A03018;
-      --ink: #1A1610;
-      --ink2: #4A4438;
-      --muted: #7A7268;
-      --shadow: rgba(26, 22, 16, 0.08);
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      font-family: 'DM Sans', sans-serif;
-      background: var(--bg);
-      color: var(--ink);
-      min-height: 100vh;
-    }
-
-    header {
-      background: var(--ink);
-      border-bottom: 3px solid var(--saffron);
-      padding: 1.1rem 2rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 0.9rem;
-    }
-
-    .logo-mark {
-      width: 36px;
-      height: 36px;
-      border: 2px solid var(--saffron);
-      border-radius: 3px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1rem;
-      color: var(--saffron);
-      font-weight: 700;
-    }
-
-    .logo-text h1 {
-      font-family: 'Cormorant Garamond', serif;
-      color: #F5F1EB;
-      font-size: 1.15rem;
-      font-weight: 600;
-    }
-
-    .logo-text p {
-      font-size: 0.62rem;
-      color: var(--saffron);
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      margin-top: 0.1rem;
-      opacity: 0.8;
-    }
-
-    .header-nav {
-      display: flex;
-      gap: 0.6rem;
-      align-items: center;
-    }
-
-    .btn {
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.76rem;
-      font-weight: 600;
-      padding: 0.42rem 0.9rem;
-      border-radius: 3px;
-      cursor: pointer;
-      border: none;
-      transition: all 0.15s;
-    }
-
-    .btn-light {
-      background: transparent;
-      color: #F5F1EB;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-    }
-
-    .btn-light:hover {
-      border-color: var(--saffron);
-      color: var(--saffron);
-    }
-
-    .btn-ink {
-      background: var(--ink);
-      color: white;
-    }
-
-    .btn-ink:hover {
-      background: #2C2418;
-    }
-
-    .btn-ghost {
-      background: transparent;
-      color: var(--ink2);
-      border: 1px solid var(--border2);
-    }
-
-    .btn-ghost:hover {
-      border-color: var(--saffron);
-      color: var(--saffron);
-    }
-
-    .btn-sm {
-      font-size: 0.68rem;
-      padding: 0.3rem 0.7rem;
-    }
-
-    .container {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 1.6rem 1.5rem 5rem;
-    }
-
-    .label {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.6rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--saffron);
-      margin-bottom: 0.45rem;
-    }
-
-    /* LIVE BAR */
-    .live-bar {
-      background: var(--ink);
-      padding: 0.6rem 1.3rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 0.6rem;
-    }
-
-    .live-indicator {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 0.72rem;
-      color: rgba(245, 241, 235, 0.6);
-    }
-
-    .live-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: #3A7040;
-      animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-
-      0%,
-      100% {
-        opacity: 1
-      }
-
-      50% {
-        opacity: 0.4
-      }
-    }
-
-    .live-dot.offline {
-      background: #7A7268;
-      animation: none;
-    }
-
-    .live-controls {
-      display: flex;
-      gap: 0.5rem;
-      align-items: center;
-    }
-
-    .refresh-btn {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.62rem;
-      padding: 0.2rem 0.6rem;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      border-radius: 2px;
-      background: transparent;
-      color: rgba(245, 241, 235, 0.5);
-      cursor: pointer;
-      transition: all 0.15s;
-    }
-
-    .refresh-btn:hover {
-      border-color: var(--saffron);
-      color: var(--saffron);
-    }
-
-    /* ROLE WEIGHTS */
-    .rw-panel {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 1rem 1.3rem;
-      margin-bottom: 1.3rem;
-      box-shadow: 0 1px 4px var(--shadow);
-      display: flex;
-      align-items: center;
-      gap: 2rem;
-      flex-wrap: wrap;
-    }
-
-    .rw-title {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 0.98rem;
-      color: var(--ink);
-      white-space: nowrap;
-    }
-
-    .rw-items {
-      display: flex;
-      gap: 1.2rem;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-
-    .rw-item {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 0.75rem;
-      color: var(--ink2);
-    }
-
-    input.rw {
-      width: 50px;
-      text-align: center;
-      font-family: 'DM Mono', monospace;
-      font-size: 0.88rem;
-      color: var(--saffron);
-      padding: 0.28rem 0.35rem;
-      border: 1px solid var(--border2);
-      border-radius: 3px;
-      background: var(--card);
-    }
-
-    input.rw:focus {
-      outline: none;
-      border-color: var(--saffron);
-    }
-
-    .rw-note {
-      font-size: 0.68rem;
-      color: var(--muted);
-      margin-left: auto;
-    }
-
-    /* EV STATUS */
-    .ev-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(185px, 1fr));
-      gap: 0.7rem;
-      margin-bottom: 1.3rem;
-    }
-
-    .ev-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 5px;
-      padding: 0.85rem 1rem;
-      box-shadow: 0 1px 3px var(--shadow);
-    }
-
-    .ev-card-name {
-      font-weight: 600;
-      font-size: 0.83rem;
-      margin-bottom: 0.12rem;
-    }
-
-    .ev-card-role {
-      font-size: 0.65rem;
-      color: var(--muted);
-      margin-bottom: 0.5rem;
-    }
-
-    .ev-scores {
-      display: flex;
-      gap: 0.4rem;
-    }
-
-    .ev-score-chip {
-      flex: 1;
-      text-align: center;
-      padding: 0.28rem;
-      border-radius: 3px;
-      background: var(--card);
-    }
-
-    .ev-score-chip .sc-lbl {
-      font-size: 0.56rem;
-      color: var(--muted);
-      display: block;
-      margin-bottom: 0.1rem;
-    }
-
-    .ev-score-chip .sc-val {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.82rem;
-      font-weight: 600;
-      color: var(--ink2);
-    }
-
-    .ev-score-chip.winner {
-      background: rgba(200, 106, 24, 0.08);
-      border: 1px solid rgba(200, 106, 24, 0.2);
-    }
-
-    .ev-score-chip.winner .sc-val {
-      color: var(--saffron);
-    }
-
-    .ev-winner-note {
-      font-size: 0.65rem;
-      color: var(--muted);
-      padding-top: 0.4rem;
-      border-top: 1px solid var(--border);
-      margin-top: 0.4rem;
-    }
-
-    /* MAIN RESULTS */
-    .results-panel {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      overflow: hidden;
-      margin-bottom: 1.3rem;
-      box-shadow: 0 2px 8px var(--shadow);
-    }
-
-    .rp-header {
-      background: var(--ink);
-      padding: 0.9rem 1.4rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .rp-header h2 {
-      font-family: 'Cormorant Garamond', serif;
-      color: #F5F1EB;
-      font-size: 1.05rem;
-    }
-
-    .rp-meta {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.62rem;
-      color: rgba(245, 241, 235, 0.4);
-    }
-
-    .rp-body {
-      display: grid;
-      grid-template-columns: 1.7fr 1fr;
-    }
-
-    .bars-side {
-      padding: 1.4rem;
-      border-right: 1px solid var(--border);
-    }
-
-    .abar-row {
-      margin-bottom: 1rem;
-    }
-
-    .abar-meta {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      margin-bottom: 0.3rem;
-    }
-
-    .abar-name {
-      font-weight: 600;
-      font-size: 0.86rem;
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-    }
-
-    .arank {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.6rem;
-      color: var(--muted);
-    }
-
-    .leader-tag {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.58rem;
-      padding: 0.1rem 0.38rem;
-      border-radius: 2px;
-      background: rgba(200, 106, 24, 0.1);
-      color: var(--saffron);
-    }
-
-    .abar-track {
-      height: 9px;
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 5px;
-      overflow: hidden;
-    }
-
-    .abar-fill {
-      height: 100%;
-      border-radius: 5px;
-      transition: width 0.6s cubic-bezier(.4, 0, .2, 1);
-    }
-
-    .fa {
-      background: linear-gradient(90deg, #C86A18, #E09040);
-    }
-
-    .fb {
-      background: linear-gradient(90deg, #3A7040, #5A9060);
-    }
-
-    .fc {
-      background: linear-gradient(90deg, #A8820A, #C8A830);
-    }
-
-    .abar-pct {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.8rem;
-      font-weight: 600;
-    }
-
-    .votes-row {
-      margin-top: 1rem;
-      padding-top: 1rem;
-      border-top: 1px solid var(--border);
-      font-size: 0.7rem;
-      color: var(--muted);
-    }
-
-    .verdict-side {
-      background: var(--ink);
-      padding: 1.4rem;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .v-lbl {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.58rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--saffron);
-      margin-bottom: 0.35rem;
-    }
-
-    .v-name {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.45rem;
-      color: #F5F1EB;
-      line-height: 1.2;
-      margin-bottom: 0.5rem;
-      flex-grow: 1;
-    }
-
-    .v-score {
-      font-family: 'DM Mono', monospace;
-      font-size: 1.9rem;
-      color: #C8A830;
-    }
-
-    .v-sub {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.63rem;
-      color: rgba(200, 106, 24, 0.7);
-    }
-
-    .v-margin {
-      margin-top: 0.9rem;
-      padding-top: 0.9rem;
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
-      font-size: 0.68rem;
-      color: rgba(245, 241, 235, 0.38);
-      line-height: 1.6;
-    }
-
-    .agree-badge {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.6rem;
-      padding: 0.12rem 0.42rem;
-      border-radius: 2px;
-    }
-
-    .ab-s {
-      background: rgba(58, 112, 64, 0.25);
-      color: #5A9060;
-    }
-
-    .ab-m {
-      background: rgba(200, 106, 24, 0.2);
-      color: #E09040;
-    }
-
-    .ab-x {
-      background: rgba(160, 48, 24, 0.2);
-      color: #D06050;
-    }
-
-    /* BREAKDOWN TABLES */
-    .section-panel {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      margin-bottom: 1.3rem;
-      box-shadow: 0 1px 4px var(--shadow);
-      overflow: hidden;
-    }
-
-    .sp-header {
-      padding: 0.85rem 1.3rem;
-      border-bottom: 1px solid var(--border);
-      background: var(--card);
-    }
-
-    .sp-header h2 {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 0.98rem;
-      color: var(--ink);
-    }
-
-    .sp-body {
-      padding: 1.2rem 1.3rem;
-      overflow-x: auto;
-    }
-
-    table.bk {
-      width: 100%;
-      border-collapse: collapse;
-      min-width: 480px;
-    }
-
-    table.bk th {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.57rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--muted);
-      padding: 0.5rem 0.8rem;
-      background: var(--card);
-      border-bottom: 1px solid var(--border);
-      text-align: left;
-    }
-
-    table.bk th.num {
-      text-align: center;
-    }
-
-    table.bk td {
-      padding: 0.6rem 0.8rem;
-      border-bottom: 1px solid var(--border);
-      font-size: 0.79rem;
-    }
-
-    table.bk td.num {
-      text-align: center;
-      font-family: 'DM Mono', monospace;
-      font-size: 0.75rem;
-    }
-
-    table.bk tr:hover {
-      background: var(--card);
-    }
-
-    table.bk tr.agg-row {
-      background: rgba(200, 106, 24, 0.04);
-      border-top: 2px solid var(--border2);
-    }
-
-    .chip {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.57rem;
-      padding: 0.1rem 0.38rem;
-      border-radius: 2px;
-      margin-left: 0.28rem;
-    }
-
-    .cha {
-      background: rgba(200, 106, 24, 0.1);
-      color: var(--saffron);
-    }
-
-    .chb {
-      background: rgba(58, 112, 64, 0.1);
-      color: var(--sage);
-    }
-
-    .chc {
-      background: rgba(168, 130, 10, 0.1);
-      color: var(--gold);
-    }
-
-    .dot {
-      display: inline-block;
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-    }
-
-    .da {
-      background: #C86A18;
-    }
-
-    .db {
-      background: #3A7040;
-    }
-
-    .dc {
-      background: #A8820A;
-    }
-
-    /* CRITERIA TABLE */
-    table.cc {
-      width: 100%;
-      border-collapse: collapse;
-      min-width: 500px;
-    }
-
-    table.cc th {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.57rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--muted);
-      padding: 0.45rem 0.7rem;
-      background: var(--card);
-      border-bottom: 1px solid var(--border);
-      text-align: left;
-    }
-
-    table.cc th.num {
-      text-align: center;
-    }
-
-    table.cc td {
-      padding: 0.52rem 0.7rem;
-      border-bottom: 1px solid var(--border);
-      font-size: 0.77rem;
-    }
-
-    table.cc td.num {
-      text-align: center;
-      font-family: 'DM Mono', monospace;
-      font-size: 0.7rem;
-    }
-
-    table.cc tr.cat-row {
-      background: rgba(200, 106, 24, 0.04);
-    }
-
-    table.cc tr.cat-row td {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.57rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--saffron);
-      padding: 0.32rem 0.7rem;
-    }
-
-    table.cc tr:hover:not(.cat-row) {
-      background: var(--card);
-    }
-
-    .crit-note {
-      font-size: 0.7rem;
-      color: var(--muted);
-      margin-bottom: 0.7rem;
-      font-style: italic;
-    }
-
-    /* NOTES */
-    .notes-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 0.8rem;
-    }
-
-    .note-col {
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      padding: 0.85rem;
-    }
-
-    .note-col-title {
-      font-size: 0.63rem;
-      font-weight: 600;
-      color: var(--muted);
-      letter-spacing: 0.07em;
-      text-transform: uppercase;
-      margin-bottom: 0.55rem;
-      display: flex;
-      align-items: center;
-      gap: 0.32rem;
-    }
-
-    .note-entry {
-      margin-bottom: 0.55rem;
-      padding-bottom: 0.55rem;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .note-entry:last-child {
-      border: none;
-      margin: 0;
-      padding: 0;
-    }
-
-    .note-by {
-      font-size: 0.63rem;
-      color: var(--muted);
-      margin-bottom: 0.18rem;
-    }
-
-    .note-text {
-      font-size: 0.75rem;
-      color: var(--ink2);
-      line-height: 1.45;
-    }
-
-    .note-empty {
-      font-size: 0.72rem;
-      color: var(--muted);
-      font-style: italic;
-    }
-
-    /* EMPTY / LOADING */
-    .empty-state {
-      text-align: center;
-      padding: 3.5rem 1.5rem;
-    }
-
-    .empty-state h2 {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.3rem;
-      color: var(--ink2);
-      margin-bottom: 0.5rem;
-    }
-
-    .empty-state p {
-      font-size: 0.8rem;
-      color: var(--muted);
-      line-height: 1.6;
-    }
-
-    .loading-spinner {
-      display: inline-block;
-      width: 18px;
-      height: 18px;
-      border: 2px solid var(--border);
-      border-top-color: var(--saffron);
-      border-radius: 50%;
-      animation: spin 0.7s linear infinite;
-      margin-right: 0.5rem;
-      vertical-align: middle;
-    }
-
-    @keyframes spin {
-      to {
-        transform: rotate(360deg)
-      }
-    }
-
-    @media(max-width:700px) {
-      .rp-body {
-        grid-template-columns: 1fr;
-      }
-
-      .notes-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media print {
-
-      .live-bar,
-      .rw-panel,
-      .header-nav,
-      .btn {
-        display: none !important;
-      }
-    }
-
-    /* ── LOCKED SCREEN ── */
-    .locked-screen {
-      text-align: center;
-      padding: 4rem 1.5rem 5rem;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      margin-bottom: 1.3rem;
-    }
-
-    .lock-icon {
-      font-size: 3.5rem;
-      margin-bottom: 1.2rem;
-      line-height: 1;
-    }
-
-    .lock-title {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.8rem;
-      color: var(--ink);
-      margin-bottom: 0.6rem;
-    }
-
-    .lock-sub {
-      font-size: 0.85rem;
-      color: var(--muted);
-      max-width: 420px;
-      margin: 0 auto 1.2rem;
-      line-height: 1.6;
-    }
-
-    .lock-count {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.75rem;
-      color: var(--saffron);
-      margin-bottom: 2rem;
-      background: rgba(200, 106, 24, 0.08);
-      border: 1px solid rgba(200, 106, 24, 0.2);
-      display: inline-block;
-      padding: 0.3rem 1rem;
-      border-radius: 3px;
-    }
-
-    .lock-form {
-      display: flex;
-      gap: 0.6rem;
-      justify-content: center;
-      flex-wrap: wrap;
-      margin-bottom: 0.8rem;
-    }
-
-    .lock-pw {
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.88rem;
-      padding: 0.6rem 1rem;
-      border: 1.5px solid var(--border2);
-      border-radius: 4px;
-      background: var(--card);
-      color: var(--ink);
-      width: 240px;
-      transition: border-color 0.15s;
-    }
-
-    .lock-pw:focus {
-      outline: none;
-      border-color: var(--saffron);
-    }
-
-    .lock-btn {
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.85rem;
-      font-weight: 600;
-      padding: 0.6rem 1.4rem;
-      background: var(--saffron);
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: background 0.15s;
-    }
-
-    .lock-btn:hover {
-      background: #A05510;
-    }
-
-    .lock-error {
-      font-size: 0.78rem;
-      color: var(--rust);
-      min-height: 1.2rem;
-      transition: opacity 0.2s;
-    }
-
-    /* ── COUNTDOWN ── */
-    .countdown-screen {
-      text-align: center;
-      padding: 5rem 1.5rem;
-      background: var(--ink);
-      border-radius: 8px;
-      margin-bottom: 1.3rem;
-    }
-
-    .countdown-num {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 8rem;
-      font-weight: 700;
-      color: var(--saffron);
-      line-height: 1;
-      display: block;
-      transition: transform 0.15s, opacity 0.15s;
-    }
-
-    .countdown-num.pop {
-      animation: countpop 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-
-    .countdown-num.reveal-flash {
-      animation: flash 0.6s ease;
-    }
-
-    .countdown-label {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.75rem;
-      color: rgba(245, 241, 235, 0.4);
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      margin-top: 1.2rem;
-    }
-
-    @keyframes countpop {
-      0% {
-        transform: scale(0.3);
-        opacity: 0;
-      }
-
-      60% {
-        transform: scale(1.15);
-        opacity: 1;
-      }
-
-      100% {
-        transform: scale(1);
-        opacity: 1;
-      }
-    }
-
-    @keyframes flash {
-      0% {
-        transform: scale(0.5);
-        opacity: 0;
-      }
-
-      50% {
-        transform: scale(1.3);
-        opacity: 1;
-      }
-
-      100% {
-        transform: scale(1);
-        opacity: 1;
-      }
-    }
-
-    @keyframes shake {
-
-      0%,
-      100% {
-        transform: translateX(0);
-      }
-
-      20%,
-      60% {
-        transform: translateX(-6px);
-      }
-
-      40%,
-      80% {
-        transform: translateX(6px);
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YSTCA 2026 — Live Results</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F5F1EB; --surface:#FFFFFF; --card:#FAF7F2; --border:#DDD6C8;
+  --border2:#C8C0B0; --saffron:#C86A18; --gold:#A8820A; --sage:#3A7040;
+  --rust:#A03018; --ink:#1A1610; --ink2:#4A4438; --muted:#7A7268;
+  --shadow:rgba(26,22,16,0.08);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;}
+
+header{background:var(--ink);border-bottom:3px solid var(--saffron);padding:1.1rem 2rem;display:flex;align-items:center;justify-content:space-between;}
+.logo{display:flex;align-items:center;gap:0.9rem;}
+.logo-mark{width:36px;height:36px;border:2px solid var(--saffron);border-radius:3px;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:1rem;color:var(--saffron);font-weight:700;}
+.logo-text h1{font-family:'Cormorant Garamond',serif;color:#F5F1EB;font-size:1.15rem;font-weight:600;}
+.logo-text p{font-size:0.62rem;color:var(--saffron);letter-spacing:0.12em;text-transform:uppercase;margin-top:0.1rem;opacity:0.8;}
+.header-nav{display:flex;gap:0.6rem;align-items:center;}
+
+.btn{font-family:'DM Sans',sans-serif;font-size:0.76rem;font-weight:600;padding:0.42rem 0.9rem;border-radius:3px;cursor:pointer;border:none;transition:all 0.15s;}
+.btn-light{background:transparent;color:#F5F1EB;border:1px solid rgba(255,255,255,0.2);}.btn-light:hover{border-color:var(--saffron);color:var(--saffron);}
+.btn-ink{background:var(--ink);color:white;}.btn-ink:hover{background:#2C2418;}
+.btn-ghost{background:transparent;color:var(--ink2);border:1px solid var(--border2);}.btn-ghost:hover{border-color:var(--saffron);color:var(--saffron);}
+.btn-sm{font-size:0.68rem;padding:0.3rem 0.7rem;}
+
+.container{max-width:1100px;margin:0 auto;padding:1.6rem 1.5rem 5rem;}
+.label{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--saffron);margin-bottom:0.45rem;}
+
+/* LIVE BAR */
+.live-bar{background:var(--ink);padding:0.6rem 1.3rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.6rem;}
+.live-indicator{display:flex;align-items:center;gap:0.5rem;font-size:0.72rem;color:rgba(245,241,235,0.6);}
+.live-dot{width:7px;height:7px;border-radius:50%;background:#3A7040;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.live-dot.offline{background:#7A7268;animation:none;}
+.live-controls{display:flex;gap:0.5rem;align-items:center;}
+.refresh-btn{font-family:'DM Mono',monospace;font-size:0.62rem;padding:0.2rem 0.6rem;border:1px solid rgba(255,255,255,0.2);border-radius:2px;background:transparent;color:rgba(245,241,235,0.5);cursor:pointer;transition:all 0.15s;}
+.refresh-btn:hover{border-color:var(--saffron);color:var(--saffron);}
+
+/* ROLE WEIGHTS */
+.rw-panel{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:1rem 1.3rem;margin-bottom:1.3rem;box-shadow:0 1px 4px var(--shadow);display:flex;align-items:center;gap:2rem;flex-wrap:wrap;}
+.rw-title{font-family:'Cormorant Garamond',serif;font-size:0.98rem;color:var(--ink);white-space:nowrap;}
+.rw-items{display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap;}
+.rw-item{display:flex;align-items:center;gap:0.5rem;font-size:0.75rem;color:var(--ink2);}
+input.rw{width:50px;text-align:center;font-family:'DM Mono',monospace;font-size:0.88rem;color:var(--saffron);padding:0.28rem 0.35rem;border:1px solid var(--border2);border-radius:3px;background:var(--card);}
+input.rw:focus{outline:none;border-color:var(--saffron);}
+.rw-note{font-size:0.68rem;color:var(--muted);margin-left:auto;}
+
+/* EV STATUS */
+.ev-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:0.7rem;margin-bottom:1.3rem;}
+.ev-card{background:var(--surface);border:1px solid var(--border);border-radius:5px;padding:0.85rem 1rem;box-shadow:0 1px 3px var(--shadow);}
+.ev-card-name{font-weight:600;font-size:0.83rem;margin-bottom:0.12rem;}
+.ev-card-role{font-size:0.65rem;color:var(--muted);margin-bottom:0.5rem;}
+.ev-scores{display:flex;gap:0.4rem;}
+.ev-score-chip{flex:1;text-align:center;padding:0.28rem;border-radius:3px;background:var(--card);}
+.ev-score-chip .sc-lbl{font-size:0.56rem;color:var(--muted);display:block;margin-bottom:0.1rem;}
+.ev-score-chip .sc-val{font-family:'DM Mono',monospace;font-size:0.82rem;font-weight:600;color:var(--ink2);}
+.ev-score-chip.winner{background:rgba(200,106,24,0.08);border:1px solid rgba(200,106,24,0.2);}
+.ev-score-chip.winner .sc-val{color:var(--saffron);}
+.ev-winner-note{font-size:0.65rem;color:var(--muted);padding-top:0.4rem;border-top:1px solid var(--border);margin-top:0.4rem;}
+
+/* MAIN RESULTS */
+.results-panel{background:var(--surface);border:1px solid var(--border);border-radius:6px;overflow:hidden;margin-bottom:1.3rem;box-shadow:0 2px 8px var(--shadow);}
+.rp-header{background:var(--ink);padding:0.9rem 1.4rem;display:flex;justify-content:space-between;align-items:center;}
+.rp-header h2{font-family:'Cormorant Garamond',serif;color:#F5F1EB;font-size:1.05rem;}
+.rp-meta{font-family:'DM Mono',monospace;font-size:0.62rem;color:rgba(245,241,235,0.4);}
+
+.rp-body{display:grid;grid-template-columns:1.7fr 1fr;}
+.bars-side{padding:1.4rem;border-right:1px solid var(--border);}
+.abar-row{margin-bottom:1rem;}
+.abar-meta{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:0.3rem;}
+.abar-name{font-weight:600;font-size:0.86rem;display:flex;align-items:center;gap:0.4rem;}
+.arank{font-family:'DM Mono',monospace;font-size:0.6rem;color:var(--muted);}
+.leader-tag{font-family:'DM Mono',monospace;font-size:0.58rem;padding:0.1rem 0.38rem;border-radius:2px;background:rgba(200,106,24,0.1);color:var(--saffron);}
+.abar-track{height:9px;background:var(--card);border:1px solid var(--border);border-radius:5px;overflow:hidden;}
+.abar-fill{height:100%;border-radius:5px;transition:width 0.6s cubic-bezier(.4,0,.2,1);}
+.fa{background:linear-gradient(90deg,#C86A18,#E09040);}
+.fb{background:linear-gradient(90deg,#3A7040,#5A9060);}
+.fc{background:linear-gradient(90deg,#A8820A,#C8A830);}
+.abar-pct{font-family:'DM Mono',monospace;font-size:0.8rem;font-weight:600;}
+.votes-row{margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);font-size:0.7rem;color:var(--muted);}
+
+.verdict-side{background:var(--ink);padding:1.4rem;display:flex;flex-direction:column;}
+.v-lbl{font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--saffron);margin-bottom:0.35rem;}
+.v-name{font-family:'Cormorant Garamond',serif;font-size:1.45rem;color:#F5F1EB;line-height:1.2;margin-bottom:0.5rem;flex-grow:1;}
+.v-score{font-family:'DM Mono',monospace;font-size:1.9rem;color:#C8A830;}
+.v-sub{font-family:'DM Mono',monospace;font-size:0.63rem;color:rgba(200,106,24,0.7);}
+.v-margin{margin-top:0.9rem;padding-top:0.9rem;border-top:1px solid rgba(255,255,255,0.08);font-size:0.68rem;color:rgba(245,241,235,0.38);line-height:1.6;}
+.agree-badge{font-family:'DM Mono',monospace;font-size:0.6rem;padding:0.12rem 0.42rem;border-radius:2px;}
+.ab-s{background:rgba(58,112,64,0.25);color:#5A9060;}
+.ab-m{background:rgba(200,106,24,0.2);color:#E09040;}
+.ab-x{background:rgba(160,48,24,0.2);color:#D06050;}
+
+/* BREAKDOWN TABLES */
+.section-panel{background:var(--surface);border:1px solid var(--border);border-radius:6px;margin-bottom:1.3rem;box-shadow:0 1px 4px var(--shadow);overflow:hidden;}
+.sp-header{padding:0.85rem 1.3rem;border-bottom:1px solid var(--border);background:var(--card);}
+.sp-header h2{font-family:'Cormorant Garamond',serif;font-size:0.98rem;color:var(--ink);}
+.sp-body{padding:1.2rem 1.3rem;overflow-x:auto;}
+table.bk{width:100%;border-collapse:collapse;min-width:480px;}
+table.bk th{font-family:'DM Mono',monospace;font-size:0.57rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);padding:0.5rem 0.8rem;background:var(--card);border-bottom:1px solid var(--border);text-align:left;}
+table.bk th.num{text-align:center;}
+table.bk td{padding:0.6rem 0.8rem;border-bottom:1px solid var(--border);font-size:0.79rem;}
+table.bk td.num{text-align:center;font-family:'DM Mono',monospace;font-size:0.75rem;}
+table.bk tr:hover{background:var(--card);}
+table.bk tr.agg-row{background:rgba(200,106,24,0.04);border-top:2px solid var(--border2);}
+.chip{font-family:'DM Mono',monospace;font-size:0.57rem;padding:0.1rem 0.38rem;border-radius:2px;margin-left:0.28rem;}
+.cha{background:rgba(200,106,24,0.1);color:var(--saffron);}
+.chb{background:rgba(58,112,64,0.1);color:var(--sage);}
+.chc{background:rgba(168,130,10,0.1);color:var(--gold);}
+.dot{display:inline-block;width:7px;height:7px;border-radius:50%;}
+.da{background:#C86A18;}.db{background:#3A7040;}.dc{background:#A8820A;}
+
+/* CRITERIA TABLE */
+table.cc{width:100%;border-collapse:collapse;min-width:500px;}
+table.cc th{font-family:'DM Mono',monospace;font-size:0.57rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);padding:0.45rem 0.7rem;background:var(--card);border-bottom:1px solid var(--border);text-align:left;}
+table.cc th.num{text-align:center;}
+table.cc td{padding:0.52rem 0.7rem;border-bottom:1px solid var(--border);font-size:0.77rem;}
+table.cc td.num{text-align:center;font-family:'DM Mono',monospace;font-size:0.7rem;}
+table.cc tr.cat-row{background:rgba(200,106,24,0.04);}
+table.cc tr.cat-row td{font-family:'DM Mono',monospace;font-size:0.57rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--saffron);padding:0.32rem 0.7rem;}
+table.cc tr:hover:not(.cat-row){background:var(--card);}
+.crit-note{font-size:0.7rem;color:var(--muted);margin-bottom:0.7rem;font-style:italic;}
+
+/* NOTES */
+.notes-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0.8rem;}
+.note-col{border:1px solid var(--border);border-radius:4px;padding:0.85rem;}
+.note-col-title{font-size:0.63rem;font-weight:600;color:var(--muted);letter-spacing:0.07em;text-transform:uppercase;margin-bottom:0.55rem;display:flex;align-items:center;gap:0.32rem;}
+.note-entry{margin-bottom:0.55rem;padding-bottom:0.55rem;border-bottom:1px solid var(--border);}
+.note-entry:last-child{border:none;margin:0;padding:0;}
+.note-by{font-size:0.63rem;color:var(--muted);margin-bottom:0.18rem;}
+.note-text{font-size:0.75rem;color:var(--ink2);line-height:1.45;}
+.note-empty{font-size:0.72rem;color:var(--muted);font-style:italic;}
+
+/* EMPTY / LOADING */
+.empty-state{text-align:center;padding:3.5rem 1.5rem;}
+.empty-state h2{font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:var(--ink2);margin-bottom:0.5rem;}
+.empty-state p{font-size:0.8rem;color:var(--muted);line-height:1.6;}
+.loading-spinner{display:inline-block;width:18px;height:18px;border:2px solid var(--border);border-top-color:var(--saffron);border-radius:50%;animation:spin 0.7s linear infinite;margin-right:0.5rem;vertical-align:middle;}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── DUAL VIEW ── */
+.dual-view{display:grid;grid-template-columns:1fr 1px 1fr;}
+.dual-col{display:flex;flex-direction:column;}
+.dual-col-hdr{padding:0.75rem 1.4rem 0;display:flex;flex-direction:column;gap:0.15rem;}
+.dual-col-title{font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--saffron);font-weight:600;}
+.dual-col-sub{font-size:0.65rem;color:var(--muted);}
+.dual-divider{background:var(--border);margin:1rem 0;}
+.dual-verdict{display:flex;align-items:center;gap:0.5rem;padding:0.6rem 1.4rem 1rem;flex-wrap:wrap;}
+.dual-v-label{font-family:'DM Mono',monospace;font-size:0.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;}
+.dual-v-name{font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:600;}
+.dual-v-score{font-family:'DM Mono',monospace;font-size:0.9rem;font-weight:600;}
+.dual-v-margin{font-size:0.65rem;color:var(--muted);}
+.dual-footer{border-top:1px solid var(--border);padding:0.65rem 1.4rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.5rem;font-size:0.72rem;color:var(--muted);}
+.views-agree{color:#3A7040;font-size:0.72rem;}
+.views-differ{color:var(--saffron);font-size:0.72rem;}
+@media(max-width:700px){.dual-view{grid-template-columns:1fr;}.dual-divider{width:100%;height:1px;margin:0;}}
+
+@media(max-width:700px){.rp-body{grid-template-columns:1fr;}.notes-grid{grid-template-columns:1fr;}}
+@media print{.live-bar,.rw-panel,.header-nav,.btn{display:none!important;}}
+
+/* ── LOCKED SCREEN ── */
+.locked-screen {
+  text-align: center;
+  padding: 4rem 1.5rem 5rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-bottom: 1.3rem;
+}
+.lock-icon { font-size: 3.5rem; margin-bottom: 1.2rem; line-height: 1; }
+.lock-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.8rem; color: var(--ink); margin-bottom: 0.6rem;
+}
+.lock-sub { font-size: 0.85rem; color: var(--muted); max-width: 420px; margin: 0 auto 1.2rem; line-height: 1.6; }
+.lock-count {
+  font-family: 'DM Mono', monospace; font-size: 0.75rem;
+  color: var(--saffron); margin-bottom: 2rem;
+  background: rgba(200,106,24,0.08); border: 1px solid rgba(200,106,24,0.2);
+  display: inline-block; padding: 0.3rem 1rem; border-radius: 3px;
+}
+.lock-form { display: flex; gap: 0.6rem; justify-content: center; flex-wrap: wrap; margin-bottom: 0.8rem; }
+.lock-pw {
+  font-family: 'DM Sans', sans-serif; font-size: 0.88rem;
+  padding: 0.6rem 1rem; border: 1.5px solid var(--border2);
+  border-radius: 4px; background: var(--card); color: var(--ink);
+  width: 240px; transition: border-color 0.15s;
+}
+.lock-pw:focus { outline: none; border-color: var(--saffron); }
+.lock-btn {
+  font-family: 'DM Sans', sans-serif; font-size: 0.85rem; font-weight: 600;
+  padding: 0.6rem 1.4rem; background: var(--saffron); color: white;
+  border: none; border-radius: 4px; cursor: pointer; transition: background 0.15s;
+}
+.lock-btn:hover { background: #A05510; }
+.lock-error {
+  font-size: 0.78rem; color: var(--rust); min-height: 1.2rem;
+  transition: opacity 0.2s;
+}
+
+/* ── COUNTDOWN ── */
+.countdown-screen {
+  text-align: center; padding: 5rem 1.5rem;
+  background: var(--ink); border-radius: 8px; margin-bottom: 1.3rem;
+}
+.countdown-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 8rem; font-weight: 700; color: var(--saffron);
+  line-height: 1; display: block;
+  transition: transform 0.15s, opacity 0.15s;
+}
+.countdown-num.pop {
+  animation: countpop 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.countdown-num.reveal-flash {
+  animation: flash 0.6s ease;
+}
+.countdown-label {
+  font-family: 'DM Mono', monospace; font-size: 0.75rem;
+  color: rgba(245,241,235,0.4); letter-spacing: 0.12em; text-transform: uppercase;
+  margin-top: 1.2rem;
+}
+
+@keyframes countpop {
+  0%   { transform: scale(0.3); opacity: 0; }
+  60%  { transform: scale(1.15); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+@keyframes flash {
+  0%   { transform: scale(0.5); opacity: 0; }
+  50%  { transform: scale(1.3); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  20%,60% { transform: translateX(-6px); }
+  40%,80% { transform: translateX(6px); }
+}
+</style>
 </head>
-
 <body>
 
-  <header>
-    <div class="logo">
-      <div class="logo-mark">YS</div>
-      <div class="logo-text">
-        <h1>YSTCA 2026 — Live Results</h1>
-        <p>Beneficiary Selection Aggregator</p>
-      </div>
-    </div>
-    <div class="header-nav">
-      <a href="index.html" class="btn btn-light btn-sm">← Home</a>
-      <a href="scorecard.html" class="btn btn-light btn-sm">My Scorecard</a>
-      <button class="btn btn-light btn-sm" onclick="window.print()">Print</button>
-    </div>
-  </header>
-
-  <!-- LIVE BAR -->
-  <div class="live-bar">
-    <div class="live-indicator">
-      <div class="live-dot" id="liveDot"></div>
-      <span id="liveText">Loading…</span>
-    </div>
-    <div class="live-controls">
-      <button class="refresh-btn" onclick="loadScores()">↻ Refresh</button>
-      <span style="font-size:0.62rem;color:rgba(245,241,235,0.3)">Auto-refreshes every 30s</span>
+<header>
+  <div class="logo">
+    <div class="logo-mark">YS</div>
+    <div class="logo-text">
+      <h1>YSTCA 2026 — Live Results</h1>
+      <p>Beneficiary Selection Aggregator</p>
     </div>
   </div>
+  <div class="header-nav">
+    <a href="index.html" class="btn btn-light btn-sm">← Home</a>
+    <a href="scorecard.html" class="btn btn-light btn-sm">My Scorecard</a>
+    <button class="btn btn-light btn-sm" onclick="window.print()">Print</button>
+  </div>
+</header>
 
-  <div class="container">
+<!-- LIVE BAR -->
+<div class="live-bar">
+  <div class="live-indicator">
+    <div class="live-dot" id="liveDot"></div>
+    <span id="liveText">Loading…</span>
+  </div>
+  <div class="live-controls">
+    <button class="refresh-btn" onclick="loadScores()">↻ Refresh</button>
+    <span style="font-size:0.62rem;color:rgba(245,241,235,0.3)">Auto-refreshes every 30s</span>
+  </div>
+</div>
 
-    <!-- ROLE WEIGHTS + EVALUATOR CARDS — hidden when results are locked -->
-    <div id="aboveTheFold">
+<div class="container">
 
-      <!-- ROLE WEIGHTS -->
-      <div class="rw-panel">
-        <div class="rw-title">Evaluator Role Weights</div>
-        <div class="rw-items">
-          <div class="rw-item"><label>Parent</label><input type="number" class="rw" id="rw-parent" value="1" min="0"
-              max="10" step="0.5" oninput="renderResults()"></div>
-          <div class="rw-item"><label>Advisor</label><input type="number" class="rw" id="rw-advisor" value="1.5" min="0"
-              max="10" step="0.5" oninput="renderResults()"></div>
-          <div class="rw-item"><label>Student</label><input type="number" class="rw" id="rw-student" value="0.75"
-              min="0" max="10" step="0.5" oninput="renderResults()"></div>
-        </div>
-        <div class="rw-note">Set all to 1 for simple equal average</div>
+  <!-- ROLE WEIGHTS + EVALUATOR CARDS — hidden when results are locked -->
+  <div id="aboveTheFold">
+
+    <!-- ROLE WEIGHTS -->
+    <div class="rw-panel">
+      <div class="rw-title">Evaluator Role Weights</div>
+      <div class="rw-items">
+        <div class="rw-item"><label>Parent</label><input type="number" class="rw" id="rw-parent" value="1" min="0" max="10" step="0.5" oninput="renderResults()"></div>
+        <div class="rw-item"><label>Advisor</label><input type="number" class="rw" id="rw-advisor" value="1" min="0" max="10" step="0.5" oninput="renderResults()"></div>
+        <div class="rw-item"><label>Student</label><input type="number" class="rw" id="rw-student" value="1" min="0" max="10" step="0.5" oninput="renderResults()"></div>
       </div>
-
-      <!-- EVALUATOR CARDS -->
-      <div class="label">Evaluators (<span id="evCount">0</span>)</div>
-      <div class="ev-grid" id="evGrid"></div>
-
+      <div class="rw-note">Set all to 1 for simple equal average</div>
     </div>
 
-    <!-- RESULTS -->
-    <div id="resultsArea">
-      <div class="empty-state">
-        <h2>Waiting for scores…</h2>
-        <p>Results will appear automatically as evaluators submit their scorecards.</p>
-      </div>
-    </div>
+    <!-- EVALUATOR CARDS -->
+    <div class="label">Evaluators (<span id="evCount">0</span>)</div>
+    <div class="ev-grid" id="evGrid"></div>
 
   </div>
 
-  <script>
-    // ══════════════════════════════════════════════════════════════════════════════
-    // !! CONFIGURATION — only one thing to set here !!
-    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzOb8sXF3S9dFrtPUay_wQ_gOLNK3RKS6ZliAD6ZH17CNGC0JIcGCumqALWD0evCCM_/exec";
+  <!-- RESULTS -->
+  <div id="resultsArea">
+    <div class="empty-state">
+      <h2>Waiting for scores…</h2>
+      <p>Results will appear automatically as evaluators submit their scorecards.</p>
+    </div>
+  </div>
 
-    // Candidate names are loaded from the Google Sheet Config tab automatically.
-    // These are fallbacks only — used if the sheet is unreachable.
-    const CANDIDATES = {
-      A: "Maitri",
-      B: "PRAGNYA",
-      C: "Grail Family Services",
-    };
-    // ══════════════════════════════════════════════════════════════════════════════
+</div>
 
-    const COLORS = { A: '#C86A18', B: '#3A7040', C: '#A8820A' };
-    let allScores = [];
-    let lastCount = 0;
-    let pollTimer = null;
-    let consecutiveErrors = 0;
-    let resultsUnlocked = false;  // stays false until correct password entered
-    let resultsPassword = '';     // loaded from Config sheet — empty = always unlocked
+<script>
+// ══════════════════════════════════════════════════════════════════════════════
+// !! CONFIGURATION — only one thing to set here !!
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzOb8sXF3S9dFrtPUay_wQ_gOLNK3RKS6ZliAD6ZH17CNGC0JIcGCumqALWD0evCCM_/exec";
 
-    // Escape user-supplied strings before injecting into innerHTML
-    const esc = s => String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+// Candidate names are loaded from the Google Sheet Config tab automatically.
+// These are fallbacks only — used if the sheet is unreachable.
+const CANDIDATES = {
+  A: "Maitri",
+  B: "PRAGNYA",
+  C: "Grail Family Services",
+};
+// ══════════════════════════════════════════════════════════════════════════════
 
-    // getRW: returns the role weight multiplier. Safely handles undefined/blank/unknown roles.
-    function getRW(role) {
-      const safeRole = String(role || '').toLowerCase().trim();
-      const el = document.getElementById('rw-' + safeRole);
-      const val = el ? parseFloat(el.value) : NaN;
-      return isNaN(val) ? 1 : val;  // default to 1× for any unrecognised role
+const COLORS={A:'#C86A18',B:'#3A7040',C:'#A8820A'};
+let allScores=[];
+let lastCount=0;
+let pollTimer=null;
+let consecutiveErrors=0;
+let resultsUnlocked = false;  // stays false until correct password entered
+let resultsPassword = '';     // loaded from Config sheet — empty = always unlocked
+
+// Escape user-supplied strings before injecting into innerHTML
+const esc=s=>String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+
+// getRW: returns the role weight multiplier. Safely handles undefined/blank/unknown roles.
+function getRW(role){
+  const safeRole = String(role||'').toLowerCase().trim();
+  const el = document.getElementById('rw-' + safeRole);
+  const val = el ? parseFloat(el.value) : NaN;
+  return isNaN(val) ? 1 : val;  // default to 1× for any unrecognised role
+}
+
+// ── Smart polling ──────────────────────────────────────────────────────────────
+// Polls every 10s when scores are changing, backs off to 30s when stable,
+// pauses to 60s after errors to avoid hammering a cold Apps Script instance.
+function schedulePoll(delay){
+  if(pollTimer) clearTimeout(pollTimer);
+  pollTimer = setTimeout(loadScores, delay);
+}
+
+async function loadScores(){
+  const dot=document.getElementById('liveDot');
+  const txt=document.getElementById('liveText');
+
+  if(APPS_SCRIPT_URL==='YOUR_APPS_SCRIPT_URL_HERE'){
+    dot.className='live-dot offline';
+    txt.textContent='Not configured — set APPS_SCRIPT_URL in this file';
+    return;
+  }
+
+  // Fetch config on every poll cycle — POST bypasses Apps Script's GET cache
+  // so name/password changes in the Config sheet appear within one poll interval.
+  try {
+    const ctrl = new AbortController();
+    const tid  = setTimeout(() => ctrl.abort(), 5000);
+    const res  = await fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      body: JSON.stringify({ action: 'get_config' }),
+      signal: ctrl.signal,
+    });
+    clearTimeout(tid);
+    const text = await res.text();
+    const data = JSON.parse(text);
+    if(data.ok && data.config){
+      if(data.config.candidateA) CANDIDATES.A = data.config.candidateA;
+      if(data.config.candidateB) CANDIDATES.B = data.config.candidateB;
+      if(data.config.candidateC) CANDIDATES.C = data.config.candidateC;
+      // resultsPassword: empty string = always unlocked, any value = locked until entered
+      resultsPassword = data.config.resultsPassword || '';
+      // If password was removed from sheet mid-session, auto-unlock
+      if(!resultsPassword) resultsUnlocked = true;
     }
+  } catch(e){
+    // Silently keep existing values
+  }
 
-    // ── Smart polling ──────────────────────────────────────────────────────────────
-    // Polls every 10s when scores are changing, backs off to 30s when stable,
-    // pauses to 60s after errors to avoid hammering a cold Apps Script instance.
-    function schedulePoll(delay) {
-      if (pollTimer) clearTimeout(pollTimer);
-      pollTimer = setTimeout(loadScores, delay);
-    }
+  dot.className='live-dot';
+  dot.style.opacity='0.4';
 
-    async function loadScores() {
-      const dot = document.getElementById('liveDot');
-      const txt = document.getElementById('liveText');
+  try {
+    const res = await fetch(APPS_SCRIPT_URL+'?action=get_scores&t='+Date.now());
 
-      if (APPS_SCRIPT_URL === 'YOUR_APPS_SCRIPT_URL_HERE') {
-        dot.className = 'live-dot offline';
-        txt.textContent = 'Not configured — set APPS_SCRIPT_URL in this file';
-        return;
-      }
+    // Apps Script sometimes returns non-JSON on cold start — handle gracefully
+    const text = await res.text();
+    let data;
+    try { data = JSON.parse(text); }
+    catch(e) { throw new Error('Apps Script returned unexpected response — it may still be waking up. Retrying…'); }
 
-      // Fetch config on every poll cycle — POST bypasses Apps Script's GET cache
-      // so name/password changes in the Config sheet appear within one poll interval.
-      try {
-        const ctrl = new AbortController();
-        const tid = setTimeout(() => ctrl.abort(), 5000);
-        const res = await fetch(APPS_SCRIPT_URL, {
-          method: 'POST',
-          body: JSON.stringify({ action: 'get_config' }),
-          signal: ctrl.signal,
-        });
-        clearTimeout(tid);
-        const text = await res.text();
-        const data = JSON.parse(text);
-        if (data.ok && data.config) {
-          if (data.config.candidateA) CANDIDATES.A = data.config.candidateA;
-          if (data.config.candidateB) CANDIDATES.B = data.config.candidateB;
-          if (data.config.candidateC) CANDIDATES.C = data.config.candidateC;
-          // resultsPassword: empty string = always unlocked, any value = locked until entered
-          resultsPassword = data.config.resultsPassword || '';
-          // If password was removed from sheet mid-session, auto-unlock
-          if (!resultsPassword) resultsUnlocked = true;
+    if(data.ok){
+      consecutiveErrors = 0;
+      dot.style.opacity = '1';
+      const newScores = data.scores || [];
+      const newCount  = newScores.length;
+
+      // Detect changes: count changed, or any evaluator's scores changed
+      const changed = newCount !== allScores.length ||
+        JSON.stringify(newScores.map(s=>s.timestamp)) !==
+        JSON.stringify(allScores.map(s=>s.timestamp));
+
+      allScores = newScores;
+      txt.textContent = `Live · ${newCount} score${newCount!==1?'s':''} · Updated ${new Date().toLocaleTimeString()}`;
+      document.getElementById('evCount').textContent = newCount;
+
+      if(changed){
+        renderEvGrid();
+        renderResults();
+        if(newCount > lastCount && lastCount > 0){
+          document.title = '✦ New Score! — YSTCA Aggregator';
+          setTimeout(()=>document.title='YSTCA 2026 — Live Results', 3000);
         }
-      } catch (e) {
-        // Silently keep existing values
+        lastCount = newCount;
+        schedulePoll(10000);   // new data came in — check again in 10s
+      } else {
+        schedulePoll(30000);   // stable — slow down to 30s
       }
 
-      dot.className = 'live-dot';
-      dot.style.opacity = '0.4';
-
-      try {
-        const res = await fetch(APPS_SCRIPT_URL + '?action=get_scores&t=' + Date.now());
-
-        // Apps Script sometimes returns non-JSON on cold start — handle gracefully
-        const text = await res.text();
-        let data;
-        try { data = JSON.parse(text); }
-        catch (e) { throw new Error('Apps Script returned unexpected response — it may still be waking up. Retrying…'); }
-
-        if (data.ok) {
-          consecutiveErrors = 0;
-          dot.style.opacity = '1';
-          const newScores = data.scores || [];
-          const newCount = newScores.length;
-
-          // Detect changes: count changed, or any evaluator's scores changed
-          const changed = newCount !== allScores.length ||
-            JSON.stringify(newScores.map(s => s.timestamp)) !==
-            JSON.stringify(allScores.map(s => s.timestamp));
-
-          allScores = newScores;
-          txt.textContent = `Live · ${newCount} score${newCount !== 1 ? 's' : ''} · Updated ${new Date().toLocaleTimeString()}`;
-          document.getElementById('evCount').textContent = newCount;
-
-          if (changed) {
-            renderEvGrid();
-            renderResults();
-            if (newCount > lastCount && lastCount > 0) {
-              document.title = '✦ New Score! — YSTCA Aggregator';
-              setTimeout(() => document.title = 'YSTCA 2026 — Live Results', 3000);
-            }
-            lastCount = newCount;
-            schedulePoll(10000);   // new data came in — check again in 10s
-          } else {
-            schedulePoll(30000);   // stable — slow down to 30s
-          }
-
-        } else {
-          throw new Error(data.message || 'Unknown error');
-        }
-
-      } catch (err) {
-        consecutiveErrors++;
-        dot.className = 'live-dot offline';
-        dot.style.opacity = '1';
-        const retryIn = consecutiveErrors > 2 ? 60 : 15;
-        txt.textContent = `⚠ ${err.message} — retrying in ${retryIn}s`;
-        schedulePoll(retryIn * 1000);
-      }
+    } else {
+      throw new Error(data.message || 'Unknown error');
     }
 
-    function renderEvGrid() {
-      const grid = document.getElementById('evGrid');
-      if (!allScores.length) { grid.innerHTML = '<div style="color:var(--muted);font-size:0.8rem;grid-column:1/-1">No scores submitted yet.</div>'; return; }
-      const CDOT = { A: 'da', B: 'db', C: 'dc' };
-      grid.innerHTML = allScores.map(ev => {
-        const t = ev.totals || {}; const cands = ev.candidates || {};
-        // Fix: safe pct access — malformed rows won't crash the whole grid
-        const safePct = k => ((t[k] && t[k].pct != null) ? t[k].pct : 0);
-        const sorted = ['A', 'B', 'C'].sort((x, y) => safePct(y) - safePct(x));
-        const winner = sorted[0];
-        return `<div class="ev-card">
-      <div class="ev-card-name">${esc(ev.evaluator?.name || 'Unknown')}</div>
-      <div class="ev-card-role">${esc(ev.evaluator?.role || '—')} · ${ev.criteria?.length || '?'} criteria</div>
-      <div class="ev-scores">${['A', 'B', 'C'].map(k => `<div class="ev-score-chip ${k === winner ? 'winner' : ''}"><span class="sc-lbl"><span class="dot ${CDOT[k]}" style="display:inline-block;width:6px;height:6px;border-radius:50%;vertical-align:middle;margin-right:2px;background:${COLORS[k]}"></span>${cands[k] || k}</span><span class="sc-val">${safePct(k).toFixed(0)}%</span></div>`).join('')}</div>
-      <div class="ev-winner-note">Pick: <strong>${cands[winner] || winner}</strong></div>
+  } catch(err){
+    consecutiveErrors++;
+    dot.className='live-dot offline';
+    dot.style.opacity='1';
+    const retryIn = consecutiveErrors > 2 ? 60 : 15;
+    txt.textContent = `⚠ ${err.message} — retrying in ${retryIn}s`;
+    schedulePoll(retryIn * 1000);
+  }
+}
+
+function renderEvGrid(){
+  const grid=document.getElementById('evGrid');
+  if(!allScores.length){grid.innerHTML='<div style="color:var(--muted);font-size:0.8rem;grid-column:1/-1">No scores submitted yet.</div>';return;}
+  const CDOT={A:'da',B:'db',C:'dc'};
+  grid.innerHTML=allScores.map(ev=>{
+    const t=ev.totals||{};const cands=ev.candidates||{};
+    // Fix: safe pct access — malformed rows won't crash the whole grid
+    const safePct = k => ((t[k]&&t[k].pct!=null)?t[k].pct:0);
+    const sorted=['A','B','C'].sort((x,y)=>safePct(y)-safePct(x));
+    const winner=sorted[0];
+    return `<div class="ev-card">
+      <div class="ev-card-name">${esc(ev.evaluator?.name||'Unknown')}</div>
+      <div class="ev-card-role">${esc(ev.evaluator?.role||'—')} · ${ev.criteria?.length||'?'} criteria</div>
+      <div class="ev-scores">${['A','B','C'].map(k=>`<div class="ev-score-chip ${k===winner?'winner':''}"><span class="sc-lbl"><span class="dot ${CDOT[k]}" style="display:inline-block;width:6px;height:6px;border-radius:50%;vertical-align:middle;margin-right:2px;background:${COLORS[k]}"></span>${cands[k]||k}</span><span class="sc-val">${safePct(k).toFixed(0)}%</span></div>`).join('')}</div>
+      <div class="ev-winner-note">Pick: <strong>${cands[winner]||winner}</strong></div>
     </div>`;
-      }).join('');
-    }
+  }).join('');
+}
 
-    function renderResults() {
-      const area = document.getElementById('resultsArea');
-      // ── LOCK CHECK ────────────────────────────────────────────────────────────
-      // If a password is set and not yet entered, show the locked screen instead
-      if (resultsPassword && !resultsUnlocked) {
-        // Hide evaluator cards and role weights — they reveal picks and influence voters
-        const atf = document.getElementById('aboveTheFold');
-        if (atf) atf.style.display = 'none';
+function renderResults(){
+  const area=document.getElementById('resultsArea');
+  // ── LOCK CHECK ────────────────────────────────────────────────────────────
+  // If a password is set and not yet entered, show the locked screen instead
+  if(resultsPassword && !resultsUnlocked){
+    // Hide evaluator cards and role weights — they reveal picks and influence voters
+    const atf = document.getElementById('aboveTheFold');
+    if(atf) atf.style.display = 'none';
 
-        area.innerHTML = `
+    area.innerHTML = `
       <div class="locked-screen" id="lockedScreen">
         <div class="lock-icon">🔒</div>
         <h2 class="lock-title">Results are locked</h2>
         <p class="lock-sub">Voting is in progress. The facilitator will unlock results when everyone has submitted.</p>
-        <div class="lock-count" id="lockCount">${allScores.length} score${allScores.length !== 1 ? 's' : ''} submitted so far</div>
+        <div class="lock-count" id="lockCount">${allScores.length} score${allScores.length!==1?'s':''} submitted so far</div>
         <div class="lock-form">
           <input type="password" id="pwInput" class="lock-pw" placeholder="Enter unlock password…"
             onkeydown="if(event.key==='Enter')tryUnlock()">
@@ -1232,117 +475,176 @@
         </div>
         <div class="lock-error" id="lockError"></div>
       </div>`;
-        document.getElementById('pwInput').focus();
-        return;
-      }
+    document.getElementById('pwInput').focus();
+    return;
+  }
 
-      // Results are unlocked — show everything
-      const atf = document.getElementById('aboveTheFold');
-      if (atf) atf.style.display = '';
+  // Results are unlocked — show everything
+  const atf = document.getElementById('aboveTheFold');
+  if(atf) atf.style.display = '';
 
-      if (!allScores.length) {
-        area.innerHTML = `<div class="empty-state"><h2>Waiting for scores…</h2><p>Results will appear automatically as evaluators submit their scorecards.<br><a href="scorecard.html" style="color:var(--saffron)">Open Scorecard →</a></p></div>`;
-        return;
-      }
+  if(!allScores.length){
+    area.innerHTML=`<div class="empty-state"><h2>Waiting for scores…</h2><p>Results will appear automatically as evaluators submit their scorecards.<br><a href="scorecard.html" style="color:var(--saffron)">Open Scorecard →</a></p></div>`;
+    return;
+  }
 
-      // Use locked CANDIDATES config as the authoritative name source.
-      // mostCommon() from submissions is kept as fallback only, in case config
-      // wasn't updated before deploy — but config always wins if set.
-      function mostCommon(arr) {
-        // Filter out null/undefined/empty before counting so they don't skew the result
-        const freq = {};
-        arr.filter(v => v && String(v).trim()).forEach(v => {
-          const k = String(v).trim(); freq[k] = (freq[k] || 0) + 1;
-        });
-        return Object.entries(freq).sort((a, b) => b[1] - a[1])[0]?.[0] || '';
-      }
-      const submittedNames = {
-        A: mostCommon(allScores.map(s => s.candidates?.A || '')),
-        B: mostCommon(allScores.map(s => s.candidates?.B || '')),
-        C: mostCommon(allScores.map(s => s.candidates?.C || '')),
-      };
-      const names = {
-        A: (CANDIDATES.A && CANDIDATES.A !== 'Candidate A') ? CANDIDATES.A : (submittedNames.A || 'Candidate A'),
-        B: (CANDIDATES.B && CANDIDATES.B !== 'Candidate B') ? CANDIDATES.B : (submittedNames.B || 'Candidate B'),
-        C: (CANDIDATES.C && CANDIDATES.C !== 'Candidate C') ? CANDIDATES.C : (submittedNames.C || 'Candidate C'),
-      };
+  // Use locked CANDIDATES config as the authoritative name source.
+  // mostCommon() from submissions is kept as fallback only, in case config
+  // wasn't updated before deploy — but config always wins if set.
+  function mostCommon(arr) {
+    // Filter out null/undefined/empty before counting so they don't skew the result
+    const freq={};
+    arr.filter(v=>v && String(v).trim()).forEach(v=>{
+      const k=String(v).trim(); freq[k]=(freq[k]||0)+1;
+    });
+    return Object.entries(freq).sort((a,b)=>b[1]-a[1])[0]?.[0]||'';
+  }
+  const submittedNames={
+    A: mostCommon(allScores.map(s=>s.candidates?.A||'')),
+    B: mostCommon(allScores.map(s=>s.candidates?.B||'')),
+    C: mostCommon(allScores.map(s=>s.candidates?.C||'')),
+  };
+  const names={
+    A: (CANDIDATES.A && CANDIDATES.A !== 'Candidate A') ? CANDIDATES.A : (submittedNames.A || 'Candidate A'),
+    B: (CANDIDATES.B && CANDIDATES.B !== 'Candidate B') ? CANDIDATES.B : (submittedNames.B || 'Candidate B'),
+    C: (CANDIDATES.C && CANDIDATES.C !== 'Candidate C') ? CANDIDATES.C : (submittedNames.C || 'Candidate C'),
+  };
 
-      // Fix: safe pct accessor — won't crash on malformed rows
-      const safePct = (totals, k) => {
-        const v = totals?.[k]?.pct;
-        return (v != null && !isNaN(v)) ? Number(v) : 0;
-      };
+  // Fix: safe pct accessor — won't crash on malformed rows
+  const safePct = (totals, k) => {
+    const v = totals?.[k]?.pct;
+    return (v != null && !isNaN(v)) ? Number(v) : 0;
+  };
 
-      // Weighted aggregate
-      let aggPct = { A: 0, B: 0, C: 0 }, totalRW = 0;
-      const evWinners = [];
-      allScores.forEach(ev => {
-        const rw = getRW(ev.evaluator?.role || 'parent'); totalRW += rw;
-        const t = ev.totals || {};
-        ['A', 'B', 'C'].forEach(k => aggPct[k] += safePct(t, k) * rw);
-        evWinners.push(['A', 'B', 'C'].sort((x, y) => safePct(t, y) - safePct(t, x))[0]);
-      });
-      if (totalRW > 0) ['A', 'B', 'C'].forEach(k => aggPct[k] /= totalRW);
-      const sorted = ['A', 'B', 'C'].sort((x, y) => aggPct[y] - aggPct[x]);
-      const winner = sorted[0], second = sorted[1];
-      const margin = (aggPct[winner] - aggPct[second]).toFixed(1);
-      const ranks = { [sorted[0]]: '1st', [sorted[1]]: '2nd', [sorted[2]]: '3rd' };
+  // Weighted aggregate (existing — unchanged)
+  let aggPct={A:0,B:0,C:0},totalRW=0;
+  const evWinners=[];
+  allScores.forEach(ev=>{
+    const rw=getRW(ev.evaluator?.role||'parent');totalRW+=rw;
+    const t=ev.totals||{};
+    ['A','B','C'].forEach(k=>aggPct[k]+=safePct(t,k)*rw);
+    evWinners.push(['A','B','C'].sort((x,y)=>safePct(t,y)-safePct(t,x))[0]);
+  });
+  if(totalRW>0)['A','B','C'].forEach(k=>aggPct[k]/=totalRW);
 
-      const wc = { A: 0, B: 0, C: 0 }; evWinners.forEach(w => wc[w]++);
-      const wv = wc[winner], tv = allScores.length;
-      const agreeStr = wv === tv ? 'Unanimous' : wv > tv / 2 ? 'Majority' : 'Split';
-      const ac = wv === tv ? 'ab-s' : wv > tv / 2 ? 'ab-m' : 'ab-x';
+  // Vote count — how many evaluators picked each org as their #1
+  const voteCt={A:0,B:0,C:0};
+  evWinners.forEach(w=>voteCt[w]++);
+  const voteSorted=['A','B','C'].sort((x,y)=>voteCt[y]-voteCt[x]);
+  const voteWinner=voteSorted[0];
 
-      // Criteria union
-      const critMap = {};
-      allScores.forEach(ev => {
-        (ev.criteria || []).forEach(c => {
-          if (!critMap[c.name]) critMap[c.name] = { name: c.name, cat: c.cat || 'Other', entries: [] };
-          critMap[c.name].entries.push({ scores: c.scores || {}, weight: c.weight || 0, rw: getRW(ev.evaluator?.role) });
-        });
-      });
-      const catOrder = ['Mission Alignment', 'Org Quality', 'Fundraising', 'Partnership'];
-      const critRows = Object.values(critMap).map(cm => {
-        let ws = { A: 0, B: 0, C: 0 }, wt = 0;
-        cm.entries.forEach(e => { ['A', 'B', 'C'].forEach(k => ws[k] += (e.scores[k] || 0) * e.rw); wt += e.rw; });
-        const avg = { A: wt ? +(ws.A / wt).toFixed(2) : 0, B: wt ? +(ws.B / wt).toFixed(2) : 0, C: wt ? +(ws.C / wt).toFixed(2) : 0 };
-        return { name: cm.name, cat: cm.cat, avg, count: cm.entries.length };
-      }).sort((a, b) => {
-        const ci = x => catOrder.indexOf(x.cat) === -1 ? 99 : catOrder.indexOf(x.cat);
-        return ci(a) - ci(b) || a.name.localeCompare(b.name);
-      });
+  const sorted=['A','B','C'].sort((x,y)=>aggPct[y]-aggPct[x]);
+  const winner=sorted[0],second=sorted[1];
+  const margin=(aggPct[winner]-aggPct[second]).toFixed(1);
+  const ranks={[sorted[0]]:'1st',[sorted[1]]:'2nd',[sorted[2]]:'3rd'};
+  const voteRanks={[voteSorted[0]]:'1st',[voteSorted[1]]:'2nd',[voteSorted[2]]:'3rd'};
 
-      // Notes
-      const notesAgg = { A: [], B: [], C: [] };
-      allScores.forEach(ev => ['A', 'B', 'C'].forEach(k => { const n = ev.notes?.[k]; if (n && n.trim()) notesAgg[k].push({ by: ev.evaluator.name, text: n.trim() }); }));
-      const hasNotes = Object.values(notesAgg).some(a => a.length);
+  const wc=voteCt; // already computed above — reuse for footer picks line
+  const wv=wc[winner],tv=allScores.length;
+  const agreeStr=wv===tv?'Unanimous':wv>tv/2?'Majority':'Split';
+  const ac=wv===tv?'ab-s':wv>tv/2?'ab-m':'ab-x';
 
-      area.innerHTML = `
-  <!-- MAIN RESULTS -->
+  // Do both methods agree on the winner?
+  const viewsAgree = winner === voteWinner;
+
+  // Criteria union
+  const critMap={};
+  allScores.forEach(ev=>{
+    (ev.criteria||[]).forEach(c=>{
+      if(!critMap[c.name])critMap[c.name]={name:c.name,cat:c.cat||'Other',entries:[]};
+      critMap[c.name].entries.push({scores:c.scores||{},weight:c.weight||0,rw:getRW(ev.evaluator?.role)});
+    });
+  });
+  const catOrder=['Mission Alignment','Org Quality','Fundraising','Partnership'];
+  const critRows=Object.values(critMap).map(cm=>{
+    let ws={A:0,B:0,C:0},wt=0;
+    cm.entries.forEach(e=>{['A','B','C'].forEach(k=>ws[k]+=(e.scores[k]||0)*e.rw);wt+=e.rw;});
+    const avg={A:wt?+(ws.A/wt).toFixed(2):0,B:wt?+(ws.B/wt).toFixed(2):0,C:wt?+(ws.C/wt).toFixed(2):0};
+    return{name:cm.name,cat:cm.cat,avg,count:cm.entries.length};
+  }).sort((a,b)=>{
+    const ci=x=>catOrder.indexOf(x.cat)===-1?99:catOrder.indexOf(x.cat);
+    return ci(a)-ci(b)||a.name.localeCompare(b.name);
+  });
+
+  // Notes
+  const notesAgg={A:[],B:[],C:[]};
+  allScores.forEach(ev=>['A','B','C'].forEach(k=>{const n=ev.notes?.[k];if(n&&n.trim())notesAgg[k].push({by:ev.evaluator.name,text:n.trim()});}));
+  const hasNotes=Object.values(notesAgg).some(a=>a.length);
+
+  area.innerHTML=`
+  <!-- MAIN RESULTS — DUAL VIEW -->
   <div class="results-panel">
     <div class="rp-header">
-      <h2>Aggregated Results · ${allScores.length} Evaluator${allScores.length > 1 ? 's' : ''}</h2>
-      <span class="rp-meta">Role-weighted · Live</span>
+      <h2>Aggregated Results · ${allScores.length} Evaluator${allScores.length>1?'s':''}</h2>
+      <span class="rp-meta">${viewsAgree?'Both views agree':'Views differ'} · Live</span>
     </div>
-    <div class="rp-body">
-      <div class="bars-side">
-        <div class="label" style="margin-bottom:0.75rem">Weighted Average Score</div>
-        ${['A', 'B', 'C'].map(k => `
-        <div class="abar-row">
-          <div class="abar-meta">
-            <div class="abar-name"><span class="dot d${k.toLowerCase()}" style="display:inline-block;width:9px;height:9px;border-radius:50%;background:${COLORS[k]}"></span>${names[k]}<span class="arank">${ranks[k]}</span>${k === winner ? `<span class="leader-tag">✓ Leader</span>` : ''}</div>
-            <div class="abar-pct" style="color:${COLORS[k]}">${aggPct[k].toFixed(1)}%</div>
-          </div>
-          <div class="abar-track"><div class="abar-fill f${k.toLowerCase()}" style="width:${aggPct[k]}%"></div></div>
-        </div>`).join('')}
-        <div class="votes-row">Individual picks: ${['A', 'B', 'C'].map(k => wc[k] > 0 ? `<strong>${names[k]}</strong> ${wc[k]}×` : null).filter(Boolean).join(' · ')}</div>
+
+    <!-- TWO COLUMNS: weighted + equal -->
+    <div class="dual-view">
+
+      <!-- LEFT: Role-weighted -->
+      <div class="dual-col">
+        <div class="dual-col-hdr">
+          <span class="dual-col-title">Role-Weighted</span>
+          <span class="dual-col-sub">Average score weighted by evaluator role</span>
+        </div>
+        <div class="bars-side" style="border-right:none;padding:1.2rem 1.4rem 0.5rem">
+          ${sorted.map(k=>`
+          <div class="abar-row">
+            <div class="abar-meta">
+              <div class="abar-name"><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:${COLORS[k]};margin-right:5px;vertical-align:middle"></span>${names[k]}<span class="arank">${ranks[k]}</span>${k===winner?`<span class="leader-tag">✓ Leader</span>`:''}</div>
+              <div class="abar-pct" style="color:${COLORS[k]}">${aggPct[k].toFixed(1)}%</div>
+            </div>
+            <div class="abar-track"><div class="abar-fill f${k.toLowerCase()}" style="width:${aggPct[k]}%"></div></div>
+          </div>`).join('')}
+        </div>
+        <div class="dual-verdict">
+          <span class="dual-v-label">Weighted pick:</span>
+          <span class="dual-v-name" style="color:${COLORS[winner]}">${names[winner]}</span>
+          <span class="dual-v-score">${aggPct[winner].toFixed(1)}%</span>
+          <span class="dual-v-margin">leads by ${margin} pts</span>
+        </div>
       </div>
-      <div class="verdict-side">
-        <div class="v-lbl">Recommendation</div>
-        <div class="v-name">${names[winner]}</div>
-        <div class="v-score">${aggPct[winner].toFixed(1)}%</div>
-        <div class="v-sub">avg. across ${allScores.length} evaluator${allScores.length > 1 ? 's' : ''}</div>
-        <div class="v-margin">Leads ${names[second]} by ${margin} pts.<br>${parseFloat(margin) < 5 ? 'Close race — discussion recommended.' : 'Clear data-driven frontrunner.'}<br><br>Agreement: <span class="agree-badge ${ac}">${agreeStr} (${wv}/${tv})</span></div>
+
+      <!-- DIVIDER -->
+      <div class="dual-divider"></div>
+
+      <!-- RIGHT: Vote count -->
+      <div class="dual-col">
+        <div class="dual-col-hdr">
+          <span class="dual-col-title">Vote Count</span>
+          <span class="dual-col-sub">How many evaluators picked each org as their #1</span>
+        </div>
+        <div class="bars-side" style="border-right:none;padding:1.2rem 1.4rem 0.5rem">
+          ${voteSorted.map(k=>`
+          <div class="abar-row">
+            <div class="abar-meta">
+              <div class="abar-name"><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:${COLORS[k]};margin-right:5px;vertical-align:middle"></span>${names[k]}<span class="arank">${voteRanks[k]}</span>${k===voteWinner?`<span class="leader-tag">✓ Leader</span>`:''}</div>
+              <div class="abar-pct" style="color:${COLORS[k]}">${voteCt[k]} vote${voteCt[k]!==1?'s':''}</div>
+            </div>
+            <div class="abar-track"><div class="abar-fill f${k.toLowerCase()}" style="width:${tv>0?(voteCt[k]/tv*100).toFixed(1):0}%"></div></div>
+          </div>`).join('')}
+        </div>
+        <div class="dual-verdict">
+          <span class="dual-v-label">Most votes:</span>
+          <span class="dual-v-name" style="color:${COLORS[voteWinner]}">${names[voteWinner]}</span>
+          <span class="dual-v-score">${voteCt[voteWinner]}/${tv}</span>
+          <span class="dual-v-margin">${(voteCt[voteWinner]/tv*100).toFixed(0)}% of evaluators</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- AGREEMENT BANNER -->
+    <div class="dual-footer">
+      <div class="dual-footer-left">
+        Individual picks: ${['A','B','C'].map(k=>wc[k]>0?`<strong>${names[k]}</strong> ${wc[k]}×`:null).filter(Boolean).join(' · ')}
+        &nbsp;·&nbsp; Agreement: <span class="agree-badge ${ac}">${agreeStr} (${wv}/${tv})</span>
+      </div>
+      <div class="dual-footer-right">
+        ${viewsAgree
+          ? `<span class="views-agree">✓ Both methods recommend <strong>${names[winner]}</strong></span>`
+          : `<span class="views-differ">⚡ Methods differ — score picks <strong>${names[winner]}</strong>, votes pick <strong>${names[voteWinner]}</strong></span>`}
       </div>
     </div>
   </div>
@@ -1354,14 +656,19 @@
       <table class="bk">
         <thead><tr><th>Evaluator</th><th>Role</th><th>Wt</th><th class="num">${names.A}</th><th class="num">${names.B}</th><th class="num">${names.C}</th><th class="num">Their Pick</th></tr></thead>
         <tbody>
-          ${allScores.map(ev => {
-        const t = ev.totals || {}; const es = ['A', 'B', 'C'].sort((x, y) => safePct(t, y) - safePct(t, x)); const ew = es[0]; const rw = getRW(ev.evaluator?.role || 'parent');
-        return `<tr><td><strong>${esc(ev.evaluator?.name || 'Unknown')}</strong></td><td style="font-size:0.7rem;color:var(--muted)">${esc(ev.evaluator?.role || '—')}</td><td class="num" style="color:var(--muted)">${rw}×</td>${['A', 'B', 'C'].map(k => `<td class="num" style="color:${k === ew ? COLORS[k] : 'inherit'};font-weight:${k === ew ? '600' : '400'}">${safePct(t, k).toFixed(1)}%</td>`).join('')}<td class="num">${esc(names[ew])}<span class="chip ch${ew.toLowerCase()}">#1</span></td></tr>`;
-      }).join('')}
+          ${allScores.map(ev=>{
+            const t=ev.totals||{};const es=['A','B','C'].sort((x,y)=>safePct(t,y)-safePct(t,x));const ew=es[0];const rw=getRW(ev.evaluator?.role||'parent');
+            return `<tr><td><strong>${esc(ev.evaluator?.name||'Unknown')}</strong></td><td style="font-size:0.7rem;color:var(--muted)">${esc(ev.evaluator?.role||'—')}</td><td class="num" style="color:var(--muted)">${rw}×</td>${['A','B','C'].map(k=>`<td class="num" style="color:${k===ew?COLORS[k]:'inherit'};font-weight:${k===ew?'600':'400'}">${safePct(t,k).toFixed(1)}%</td>`).join('')}<td class="num">${esc(names[ew])}<span class="chip ch${ew.toLowerCase()}">#1</span></td></tr>`;
+          }).join('')}
           <tr class="agg-row">
-            <td><strong>AGGREGATE</strong></td><td style="font-size:0.7rem;color:var(--muted)">weighted</td><td class="num" style="color:var(--muted)">—</td>
-            ${['A', 'B', 'C'].map(k => `<td class="num" style="color:${k === winner ? COLORS[k] : 'inherit'};font-weight:${k === winner ? '700' : '400'}">${aggPct[k].toFixed(1)}%</td>`).join('')}
+            <td><strong>WEIGHTED AVG</strong></td><td style="font-size:0.7rem;color:var(--muted)">role-weighted</td><td class="num" style="color:var(--muted)">—</td>
+            ${['A','B','C'].map(k=>`<td class="num" style="color:${k===winner?COLORS[k]:'inherit'};font-weight:${k===winner?'700':'400'}">${aggPct[k].toFixed(1)}%</td>`).join('')}
             <td class="num"><strong>${names[winner]}</strong><span class="chip ch${winner.toLowerCase()}">#1</span></td>
+          </tr>
+          <tr class="agg-row" style="opacity:0.75">
+            <td><strong>VOTE COUNT</strong></td><td style="font-size:0.7rem;color:var(--muted)">#1 picks</td><td class="num" style="color:var(--muted)">—</td>
+            ${['A','B','C'].map(k=>`<td class="num" style="color:${k===voteWinner?COLORS[k]:'inherit'};font-weight:${k===voteWinner?'700':'400'}">${voteCt[k]} vote${voteCt[k]!==1?'s':''}</td>`).join('')}
+            <td class="num"><strong>${names[voteWinner]}</strong><span class="chip ch${voteWinner.toLowerCase()}">#1</span></td>
           </tr>
         </tbody>
       </table>
@@ -1375,12 +682,12 @@
       <p class="crit-note">Averaged across all evaluators who included each criteria. Counts shown where evaluators used different sets.</p>
       <table class="cc">
         <thead><tr><th>Criteria</th><th>Evaluators</th><th class="num">${names.A}</th><th class="num">${names.B}</th><th class="num">${names.C}</th><th class="num">Leader</th></tr></thead>
-        <tbody>${(() => {
-          let rows = '', lc = '';
-          critRows.forEach(cr => {
-            if (cr.cat !== lc) { lc = cr.cat; rows += `<tr class="cat-row"><td colspan="6">${cr.cat}</td></tr>`; }
-            const ws = ['A', 'B', 'C'].sort((x, y) => cr.avg[y] - cr.avg[x])[0];
-            rows += `<tr><td>${cr.name}${cr.count < allScores.length ? `<span style="font-size:0.58rem;color:var(--muted);margin-left:0.25rem">(${cr.count}/${allScores.length})</span>` : ''}</td><td style="font-size:0.68rem;color:var(--muted)">${cr.count}</td>${['A', 'B', 'C'].map(k => `<td class="num" style="color:${k === ws ? COLORS[k] : 'inherit'};font-weight:${k === ws ? '600' : '400'}">${cr.avg[k].toFixed(1)}</td>`).join('')}<td class="num"><span class="dot d${ws.toLowerCase()}" style="display:inline-block;width:7px;height:7px;border-radius:50%;background:${COLORS[ws]};vertical-align:middle;margin-right:3px"></span>${names[ws]}</td></tr>`;
+        <tbody>${(()=>{
+          let rows='',lc='';
+          critRows.forEach(cr=>{
+            if(cr.cat!==lc){lc=cr.cat;rows+=`<tr class="cat-row"><td colspan="6">${cr.cat}</td></tr>`;}
+            const ws=['A','B','C'].sort((x,y)=>cr.avg[y]-cr.avg[x])[0];
+            rows+=`<tr><td>${cr.name}${cr.count<allScores.length?`<span style="font-size:0.58rem;color:var(--muted);margin-left:0.25rem">(${cr.count}/${allScores.length})</span>`:''}</td><td style="font-size:0.68rem;color:var(--muted)">${cr.count}</td>${['A','B','C'].map(k=>`<td class="num" style="color:${k===ws?COLORS[k]:'inherit'};font-weight:${k===ws?'600':'400'}">${cr.avg[k].toFixed(1)}</td>`).join('')}<td class="num"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:${COLORS[ws]};vertical-align:middle;margin-right:3px"></span>${names[ws]}</td></tr>`;
           });
           return rows;
         })()}</tbody>
@@ -1388,92 +695,91 @@
     </div>
   </div>
 
-  ${hasNotes ? `
+  ${hasNotes?`
   <!-- NOTES -->
   <div class="section-panel">
     <div class="sp-header"><h2>Evaluator Notes</h2></div>
     <div class="sp-body">
       <div class="notes-grid">
-        ${['A', 'B', 'C'].map(k => `<div class="note-col">
-          <div class="note-col-title"><span class="dot d${k.toLowerCase()}" style="display:inline-block;width:7px;height:7px;border-radius:50%;background:${COLORS[k]}"></span>${names[k]}</div>
-          ${notesAgg[k].length ? notesAgg[k].map(n => `<div class="note-entry"><div class="note-by">${n.by}</div><div class="note-text">${n.text}</div></div>`).join('') : '<div class="note-empty">No notes.</div>'}
+        ${['A','B','C'].map(k=>`<div class="note-col">
+          <div class="note-col-title"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:${COLORS[k]};vertical-align:middle;margin-right:4px"></span>${names[k]}</div>
+          ${notesAgg[k].length?notesAgg[k].map(n=>`<div class="note-entry"><div class="note-by">${esc(n.by)}</div><div class="note-text">${esc(n.text)}</div></div>`).join(''):'<div class="note-empty">No notes.</div>'}
         </div>`).join('')}
       </div>
     </div>
-  </div>`: ''}
+  </div>`:''}
   `;
-    }
+}
 
-    // ── UNLOCK + COUNTDOWN REVEAL ─────────────────────────────────────────────────
-    function tryUnlock() {
-      const input = document.getElementById('pwInput');
-      const errEl = document.getElementById('lockError');
-      if (!input) return;
+// ── UNLOCK + COUNTDOWN REVEAL ─────────────────────────────────────────────────
+function tryUnlock() {
+  const input = document.getElementById('pwInput');
+  const errEl = document.getElementById('lockError');
+  if (!input) return;
 
-      const entered = input.value.trim();
-      if (!entered) { showLockError('Please enter the password.'); return; }
+  const entered = input.value.trim();
+  if (!entered) { showLockError('Please enter the password.'); return; }
 
-      if (entered === resultsPassword) {
-        // Correct — start countdown then reveal
-        resultsUnlocked = true;
-        startCountdown();
-      } else {
-        showLockError('Incorrect password. Try again.');
-        input.value = '';
-        input.focus();
-        // Shake animation
-        input.style.animation = 'shake 0.4s ease';
-        setTimeout(() => input.style.animation = '', 400);
-      }
-    }
+  if (entered === resultsPassword) {
+    // Correct — start countdown then reveal
+    resultsUnlocked = true;
+    startCountdown();
+  } else {
+    showLockError('Incorrect password. Try again.');
+    input.value = '';
+    input.focus();
+    // Shake animation
+    input.style.animation = 'shake 0.4s ease';
+    setTimeout(() => input.style.animation = '', 400);
+  }
+}
 
-    function showLockError(msg) {
-      const el = document.getElementById('lockError');
-      if (el) { el.textContent = msg; el.style.opacity = '1'; }
-    }
+function showLockError(msg) {
+  const el = document.getElementById('lockError');
+  if (el) { el.textContent = msg; el.style.opacity = '1'; }
+}
 
-    function startCountdown() {
-      const area = document.getElementById('resultsArea');
-      // Keep evaluator cards hidden during countdown — reveal them with the results
-      const atf = document.getElementById('aboveTheFold');
-      if (atf) atf.style.display = 'none';
+function startCountdown() {
+  const area = document.getElementById('resultsArea');
+  // Keep evaluator cards hidden during countdown — reveal them with the results
+  const atf = document.getElementById('aboveTheFold');
+  if(atf) atf.style.display = 'none';
 
-      const counts = [3, 2, 1];
-      let i = 0;
+  const counts = [3, 2, 1];
+  let i = 0;
 
-      function showCount() {
-        if (i < counts.length) {
-          area.innerHTML = `
+  function showCount() {
+    if (i < counts.length) {
+      area.innerHTML = `
         <div class="countdown-screen">
           <div class="countdown-num" id="countNum">${counts[i]}</div>
           <div class="countdown-label">Revealing results in…</div>
         </div>`;
-          requestAnimationFrame(() => {
-            const el = document.getElementById('countNum');
-            if (el) el.classList.add('pop');
-          });
-          i++;
-          setTimeout(showCount, 900);
-        } else {
-          area.innerHTML = `
+      requestAnimationFrame(() => {
+        const el = document.getElementById('countNum');
+        if (el) el.classList.add('pop');
+      });
+      i++;
+      setTimeout(showCount, 900);
+    } else {
+      area.innerHTML = `
         <div class="countdown-screen">
           <div class="countdown-num reveal-flash" id="countNum">🎉</div>
           <div class="countdown-label">Revealing results…</div>
         </div>`;
-          setTimeout(() => {
-            // Restore evaluator cards alongside the results
-            if (atf) atf.style.display = '';
-            renderResults();
-          }, 600);
-        }
-      }
-
-      showCount();
+      setTimeout(() => {
+        // Restore evaluator cards alongside the results
+        if(atf) atf.style.display = '';
+        renderResults();
+      }, 600);
     }
+  }
 
-    // Start polling immediately
-    loadScores();
-  </script>
+  showCount();
+}
+
+// Start polling immediately
+loadScores();
+</script>
 </body>
-
 </html>
